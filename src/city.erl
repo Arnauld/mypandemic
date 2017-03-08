@@ -14,6 +14,7 @@
 %% ------------------------------------------------------------------
 
 -export([new/1, infection_level/2, infects/2]).
+-define(THRESHOLD, 3).
 
 %% ------------------------------------------------------------------
 %% API Function Definitions
@@ -30,5 +31,11 @@ infection_level(City, Disease) ->
 infects(City, Disease) ->
   {CityName, Levels} = City,
   Level = maps:get(Disease, Levels, 0),
-  NewLevels = Levels#{Disease => Level + 1},
-  {CityName, NewLevels}.
+  case Level of
+    ?THRESHOLD ->
+      outbreak;
+
+    _ ->
+      NewLevels = Levels#{Disease => Level + 1},
+      {infected, {CityName, NewLevels}}
+  end.

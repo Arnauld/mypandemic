@@ -5,11 +5,86 @@
 
 #HSLIDE
 
-## Basic Commands
+## Erlang Basics - Shell & Numbers
+
+```bash
+$ erl
+Erlang/OTP 19 [erts-8.1] [source] [64-bit] [smp:4:4] [async-threads:10] [hipe] [kernel-poll:false]
+
+Eshell V8.1  (abort with ^G)
+1> 1+3.
+4
+2> 123456789 * 123456789 * 123456789 * 123456789.
+232305722798259244150093798251441
+3> 5/2. 
+2.5
+4> is_integer(2.5).
+false
+5> is_float(232305722798259244150093798251441.0).
+true
+```
 
 #VSLIDE
 
+## Erlang Basics - Variable
+
 ```erlang
+6> A = 23.
+23
+7> 23 = A.
+23
+8> 23 = B.
+* 1: variable 'B' is unbound
+9> C.
+* 1: variable 'C' is unbound
+10> A.
+23
+11> A = A + 1.
+** exception error: no match of right hand side value 24
+12> f().
+ok
+13> A.
+* 4: variable 'A' is unbound
+
+```
+
+#VSLIDE
+
+## Erlang Basics - Atom
+
+```erlang
+14> threshold = 12.
+** exception error: no match of right hand side value 12
+15> true.
+true
+16> false.
+false
+17> i_am_an_atom.
+i_am_an_atom
+```
+
+#VSLIDE
+
+## Erlang Basics - Tuple
+
+```erlang
+18> {paris, GBD}.
+** exception error: no match of right hand side value 12
+15> true.
+true
+16> false.
+false
+17> i_am_an_atom.
+i_am_an_atom
+```
+
+
+## Erlang Types
+ 
+* Numbers 
+ 
+```erlang
+1> 1 + 4.
 atom.
 1+3.
 A = 23.
@@ -159,6 +234,21 @@ infects(City, Disease) ->
 
 #VSLIDE
 
+## Handle outbreak
+
+### But before...
+
+```erlang
+case Value of
+  0 -> zero;
+  1 -> one;
+  2 -> two;
+  ping -> pong;
+  _ -> i_don_t_know
+end
+```
+
+#VSLIDE
 
 ## Handle outbreak
 
@@ -168,4 +258,55 @@ When infection level is already at 3, a new infect should cause an **outbreak**
 infects(City, Disease) -> 
   {infected, NewCity} 
   | outbreak
+```
+
+#VSLIDE
+
+```erlang
+-module(city_tests).
+
+-include_lib("eunit/include/eunit.hrl").
+
+should_not_be_infected_by_default__test() ->
+  City = city:new(london),
+  ?assertEqual(0, city:infection_level(City, blue)).
+
+should_increase_infection_level_when_infected__test() ->
+  City1 = city:new(london),
+  {infected, City2} = city:infects(City1, blue),
+  ?assertEqual(1, city:infection_level(City2, blue)).
+
+should_outbreak_when_infection_level_reaches_the_threshold__test() ->
+  City1 = city:new(london),
+  {infected, City2} = city:infects(City1, blue),
+  {infected, City3} = city:infects(City2, blue),
+  {infected, City4} = city:infects(City3, blue),
+  Result = city:infects(City4, blue),
+  ?assertEqual(outbreak, Result).
+```
+
+```erlang
+-module(city).
+
+-export([new/1, infection_level/2, infects/2]).
+-define(THRESHOLD, 3).
+
+new(CityName) ->
+  {CityName, #{}}.
+
+infection_level(City, Disease) ->
+  {_CityName, Levels} = City,
+  maps:get(Disease, Levels, 0).
+
+infects(City, Disease) ->
+  {CityName, Levels} = City,
+  Level = maps:get(Disease, Levels, 0),
+  case Level of
+    ?THRESHOLD ->
+      outbreak;
+
+    _ ->
+      NewLevels = Levels#{Disease => Level + 1},
+      {infected, {CityName, NewLevels}}
+  end.
 ```
