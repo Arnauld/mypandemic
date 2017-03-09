@@ -45,7 +45,6 @@ true
 ok
 13> A.
 * 4: variable 'A' is unbound
-
 ```
 
 #VSLIDE
@@ -68,14 +67,41 @@ i_am_an_atom
 ## Erlang Basics - Tuple
 
 ```erlang
-18> {paris, GBD}.
-** exception error: no match of right hand side value 12
-15> true.
-true
-16> false.
-false
-17> i_am_an_atom.
-i_am_an_atom
+18> {devoxx, paris, france}.
+{devoxx, paris, france}
+19> {erlang, 5}.
+{erlang, 5}
+20> HandsOn = {erlang, 200}.
+{erlang, 5}
+21> {What, Room} = HandsOn.
+erlang,5}
+22> What.
+erlang
+23> Room.
+200
+```
+
+#VSLIDE
+
+## Erlang Basics - List
+
+```erlang
+24> [paris, essen, madrid].
+[paris, essen, madrid]
+25> LS = [paris, essen, madrid].
+26> [Head | Tail] = LS. 
+27> Head.
+paris
+28> Tail.
+[essen, madrid]
+29> [First, Second | Remaining] = LS.
+30> First.
+paris
+31> Second.
+essen
+32> [madrid | Remaining2] = Remaining.
+33> Remaining2.
+[]
 ```
 
 
