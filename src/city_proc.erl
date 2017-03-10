@@ -4,42 +4,35 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 03. mars 2017 13:09
+%%% Created : 09. mars 2017 20:11
 %%%-------------------------------------------------------------------
--module(city).
+-module(city_proc).
 -author("Arnauld").
 
 %% ------------------------------------------------------------------
 %% API Function Exports
 %% ------------------------------------------------------------------
 
--export([new/1, name_of/1, infection_level/2, infects/2]).
--define(THRESHOLD, 3).
+-export([start/2, infects/2, infects/3]).
+-export([loop/2]).
 
 %% ------------------------------------------------------------------
 %% API Function Definitions
 %% ------------------------------------------------------------------
+start(CityName, Links) ->
+  spawn(?MODULE, loop, [city:new(CityName), Links]).
 
-new(CityName) ->
-  {CityName, #{}}.
+infects(_City, _Disease) ->
+  erlang:error(not_implemented).
 
-name_of(City) ->
-  {CityName, _} = City,
-  CityName.
+infects(_City, _Disease, _ReplyTo) ->
+  erlang:error(not_implemented).
 
-infection_level(City, Disease) ->
-  {_CityName, Levels} = City,
-  maps:get(Disease, Levels, 0).
-
-
-infects(City, Disease) ->
-  {CityName, Levels} = City,
-  Level = maps:get(Disease, Levels, 0),
-  case Level of
-    ?THRESHOLD ->
-      outbreak;
-
-    _ ->
-      NewLevels = Levels#{Disease => Level + 1},
-      {infected, {CityName, NewLevels}}
+loop(City, Links) ->
+  receive
+    {infection_level, Disease, ReplyTo} ->
+      Level = city:infection_level(City, Disease),
+      ReplyTo ! {infection_level, city:name_of(City), Disease, Level},
+      loop(City, Links)
   end.
+

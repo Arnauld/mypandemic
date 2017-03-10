@@ -126,12 +126,16 @@ LevelB = maps:get(gray, Levels, 0).
 
 #VSLIDE
 
+## Module
+
 ```erlang
 -module(calc).
 -export([add/2]).
 add(A,B) ->
     A+B.
 ```
+
+## Module
 
 ```erlang
 -module(calc).
@@ -143,6 +147,7 @@ divide(A,B) ->
     A/B.
 ```
 
+## Module
 
 ```erlang
 -module(calc).
@@ -155,6 +160,7 @@ divide(A,B) ->
     A/B.
 ```
 
+## Module
 
 ```erlang
 -module(calc).
@@ -169,6 +175,7 @@ divide(A,B) ->
     A/B.
 ```
 
+## Module
 
 ```erlang
 -module(calc).
@@ -288,6 +295,9 @@ infects(City, Disease) ->
 
 #VSLIDE
 
+## Handle outbreak - `city_tests`
+
+
 ```erlang
 -module(city_tests).
 
@@ -310,6 +320,8 @@ should_outbreak_when_infection_level_reaches_the_threshold__test() ->
   Result = city:infects(City4, blue),
   ?assertEqual(outbreak, Result).
 ```
+
+## Handle outbreak - `city`
 
 ```erlang
 -module(city).
@@ -336,3 +348,126 @@ infects(City, Disease) ->
       {infected, {CityName, NewLevels}}
   end.
 ```
+
+#HSLIDE
+
+## Process - Idea
+
+```
+1> City1 = city:new(london).
+2> {infected, City2} = city:infects(City1, blue).
+3> {infected, City3} = city:infects(City2, blue).
+4> {infected, City4} = city:infects(City3, blue).
+5> 3 = city:infection_level(City4, blue).
+```
+
+```
+1> Pid = city_proc:start(london).
+2> city:infects(Pid, blue).
+3> city:infects(Pid, blue).
+4> city:infects(Pid, blue).
+5> 3 = city:infection_level(Pid, blue).
+```
+
+# VSLIDE
+
+## Process - Send and Receive message
+
+```erlang
+1> Pid = spawn(fun() -> io:format("Hello~n",[]) end).
+Hello
+<0.59.0>
+2> self().
+<0.57.0>
+3> Pid2 = spawn(fun() ->
+    io:format("Hello ~p~n", [self()]),
+    receive
+      Msg ->
+        io:format("Message received ~p~n", [Msg])
+    end
+end).
+Hello <0.62.0>
+<0.62.0>
+4> Pid2 ! dooooooo.
+Message received dooooooo
+```
+
+# VSLIDE
+
+## Process - State Mutation
+
+```erlang
+-module(rpl).
+-export([start/0, loop/1]).
+start() ->
+  spawn(?MODULE, loop, [0]).
+
+loop(Count) ->
+  io:format("Waiting for message~n"),
+  receive
+    {infect, What} ->
+      NewCount = Count + 1,
+      io:format("Erf... i'm infected by ~p: ~p~n", [What, NewCount]),
+      loop(NewCount);
+    Msg ->
+      io:format("Hey: ~p~n", [Msg]),
+      loop(Count)
+  end.
+```
+
+```
+1> c("src/rpl").
+{ok,rpl}
+2> Pid = rpl:start().
+Waiting for message
+<0.64.0>
+3> Pid!what.
+Hey: what
+what
+Waiting for message
+4> Pid!{infect, blue}.
+Erf... i'm infected by blue: 1
+{infect,blue}
+Waiting for message
+5> Pid!{infect, red}. 
+Erf... i'm infected by red: 2
+{infect,red}
+Waiting for message
+
+```
+
+#HSLIDE
+
+## Protocol
+
+![Infection Level](docs/protocol0.png)
+
+```
+17> Pid = city_proc:start(london, [paris, essen, madrid]).
+<0.102.0>
+18> Pid!{infection_level, blue, self()}.                  
+{infection_level,blue,<0.99.0>}
+19> flush().
+Shell got {infection_level,london,blue,0}
+ok
+20> 
+```
+
+
+#VSLIDE
+
+## Protocol
+
+![Infection Level](docs/protocol1.png)
+
+```
+21> Pid = city_proc:start(london, [paris, essen, madrid]).
+<0.102.0>
+22> Pid!{infect, blue, self()}.                  
+{infect,blue,<0.99.0>}
+23> flush().
+Shell got {infected,london,blue,2}
+ok
+24> 
+```
+
