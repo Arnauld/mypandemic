@@ -5,7 +5,7 @@
 
 #HSLIDE
 
-## Erlang Basics - Shell & Numbers
+#### Erlang Basics - Shell & Numbers
 
 ```bash
 $ erl
@@ -26,7 +26,7 @@ true
 
 #VSLIDE
 
-## Erlang Basics - Variable
+#### Erlang Basics - Variable
 
 ```erlang
 6> A = 23.
@@ -49,7 +49,7 @@ ok
 
 #VSLIDE
 
-## Erlang Basics - Atom
+#### Erlang Basics - Atom
 
 ```erlang
 14> threshold = 12.
@@ -64,7 +64,7 @@ i_am_an_atom
 
 #VSLIDE
 
-## Erlang Basics - Tuple
+#### Erlang Basics - Tuple
 
 ```erlang
 18> {devoxx, paris, france}.
@@ -83,7 +83,7 @@ erlang
 
 #VSLIDE
 
-## Erlang Basics - List
+#### Erlang Basics - List
 
 ```erlang
 24> [paris, essen, madrid].
@@ -104,10 +104,9 @@ essen
 []
 ```
 
+#VSLIDE
 
-## Erlang Types
- 
-* Numbers 
+#### Erlang Types
  
 ```erlang
 1> 1 + 4.
@@ -126,7 +125,7 @@ LevelB = maps:get(gray, Levels, 0).
 
 #VSLIDE
 
-## Module
+#### Module
 
 ```erlang
 -module(calc).
@@ -135,7 +134,9 @@ add(A,B) ->
     A+B.
 ```
 
-## Module
+#VSLIDE
+
+#### Module
 
 ```erlang
 -module(calc).
@@ -147,7 +148,10 @@ divide(A,B) ->
     A/B.
 ```
 
-## Module
+
+#VSLIDE
+
+#### Module
 
 ```erlang
 -module(calc).
@@ -160,7 +164,10 @@ divide(A,B) ->
     A/B.
 ```
 
-## Module
+
+#VSLIDE
+
+#### Module
 
 ```erlang
 -module(calc).
@@ -175,7 +182,10 @@ divide(A,B) ->
     A/B.
 ```
 
-## Module
+
+#VSLIDE
+
+#### Module
 
 ```erlang
 -module(calc).
@@ -200,7 +210,7 @@ divide(A,B) ->
 
 #HSLIDE
 
-## City
+#### City
 
 Create a module `city` with the following functions:
 
@@ -267,9 +277,9 @@ infects(City, Disease) ->
 
 #VSLIDE
 
-## Handle outbreak
+#### Handle outbreak
 
-### But before...
+**But before...**
 
 ```erlang
 case Value of
@@ -283,7 +293,7 @@ end
 
 #VSLIDE
 
-## Handle outbreak
+#### Handle outbreak
 
 When infection level is already at 3, a new infect should cause an **outbreak**
 
@@ -295,7 +305,7 @@ infects(City, Disease) ->
 
 #VSLIDE
 
-## Handle outbreak - `city_tests`
+#### Handle outbreak - `city_tests`
 
 
 ```erlang
@@ -321,7 +331,7 @@ should_outbreak_when_infection_level_reaches_the_threshold__test() ->
   ?assertEqual(outbreak, Result).
 ```
 
-## Handle outbreak - `city`
+#### Handle outbreak - `city`
 
 ```erlang
 -module(city).
@@ -351,7 +361,7 @@ infects(City, Disease) ->
 
 #HSLIDE
 
-## Process - Idea
+#### Process - Idea
 
 ```
 1> City1 = city:new(london).
@@ -371,7 +381,7 @@ infects(City, Disease) ->
 
 # VSLIDE
 
-## Process - Send and Receive message
+#### Process - Send and Receive message
 
 ```erlang
 1> Pid = spawn(fun() -> io:format("Hello~n",[]) end).
@@ -394,7 +404,7 @@ Message received dooooooo
 
 # VSLIDE
 
-## Process - State Mutation
+#### Process - State Mutation
 
 ```erlang
 -module(rpl).
@@ -414,6 +424,10 @@ loop(Count) ->
       loop(Count)
   end.
 ```
+
+# VSLIDE
+
+#### Process - State Mutation
 
 ```
 1> c("src/rpl").
@@ -438,7 +452,7 @@ Waiting for message
 
 #HSLIDE
 
-## Protocol
+#### Protocol
 
 ![Infection Level](docs/protocol0.png)
 
@@ -453,10 +467,9 @@ ok
 20> 
 ```
 
-
 #VSLIDE
 
-## Protocol
+#### Protocol
 
 ![Infection Level](docs/protocol1.png)
 
