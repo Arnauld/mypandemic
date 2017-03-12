@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Amatic+SC');
+/*@import url('https://fonts.googleapis.com/css?family=Amatic+SC');*/
+@import url('https://fonts.googleapis.com/css?family=Slackey');
 
 .reveal section img {
     border: 0;
@@ -25,6 +26,7 @@
 }
 
 .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
-    font-family: 'Amatic SC', cursive;
+    /*font-family: 'Amatic SC', cursive;*/
+    font-family: 'Slackey', cursive;
     color: #FAA063;
 }
