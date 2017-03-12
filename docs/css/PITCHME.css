@@ -6,7 +6,8 @@
 .reveal .slides {
     text-align: left;
 }
-.reveal .slides section>* {
+
+.reveal .slides section > * {
     margin-left: 0;
     margin-right: 0;
 }
@@ -18,5 +19,9 @@
 
 .reveal {
     background-color: #453539;
+    color: #FAA063;
+}
+
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 {
     color: #FAA063;
 }
