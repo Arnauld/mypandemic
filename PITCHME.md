@@ -379,7 +379,7 @@ infects(City, Disease) ->
 5> 3 = city:infection_level(Pid, blue).
 ```
 
-# VSLIDE
+#VSLIDE
 
 #### Process - Send and Receive message
 
@@ -402,7 +402,7 @@ Hello <0.62.0>
 Message received dooooooo
 ```
 
-# VSLIDE
+#VSLIDE
 
 #### Process - State Mutation
 
@@ -425,7 +425,7 @@ loop(Count) ->
   end.
 ```
 
-# VSLIDE
+#VSLIDE
 
 #### Process - State Mutation
 
