@@ -10,3 +10,7 @@
     margin-left: 0;
     margin-right: 0;
 }
+
+.reveal pre code {
+    font-size: 12px;
+}
