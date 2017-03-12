@@ -307,7 +307,6 @@ infects(City, Disease) ->
 
 #### Handle outbreak - `city_tests`
 
-
 ```erlang
 -module(city_tests).
 
@@ -330,6 +329,8 @@ should_outbreak_when_infection_level_reaches_the_threshold__test() ->
   Result = city:infects(City4, blue),
   ?assertEqual(outbreak, Result).
 ```
+
+#VSLIDE
 
 #### Handle outbreak - `city`
 
