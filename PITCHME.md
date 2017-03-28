@@ -1,6 +1,31 @@
+
+Yvan VU @JeSuisSocial
+Arnauld Loyer @aloyer
+
 #HSLIDE
 
-## Intro...
+## A BRIEF HISTORY
+
+#VSLIDE
+
+#### 1987 : Erlang's birth
+by Joe Armstong, Robert Virding and Mike Williams
+
+#VSLIDE
+
+#### Constraints
+
+- Systems distributed with large number of concurrent activities
+- High Availability
+- Software maintenance without stopping the system
+- Reliability
+- Fault tolerance
+
+
+
+#HSLIDE
+
+## Pandemic Game
 
 
 #HSLIDE
@@ -102,6 +127,16 @@ essen
 32> [madrid | Remaining2] = Remaining.
 33> Remaining2.
 []
+```
+
+
+#VSLIDE
+
+#### Erlang Basics - Map
+
+```
+3> ...
+4>
 ```
 
 #VSLIDE
@@ -215,6 +250,7 @@ divide(A,B) ->
 Create a module `city` with the following functions:
 
 * `new(CityName) -> City`
+* `name_of(City) -> CityName`
 * `infects(City, Disease)`
 * `infection_level(City, Disease) -> Level`
 
@@ -247,6 +283,10 @@ should_increase_infection_level_when_infected__test() ->
   City2 = city:infects(City1, blue),
   ?assertEqual(1, city:infection_level(City2, blue)).
 ```
+
+#VSLIDE
+
+# Your turn!
 
 #VSLIDE
 
@@ -371,6 +411,15 @@ infects(City, Disease) ->
 4> {infected, City4} = city:infects(City3, blue).
 5> 3 = city:infection_level(City4, blue).
 ```
+
+#### Annoying when lot of mutation occurs!!
+#### How to maintain them all ?
+
+
+#VSLIDE
+
+#### Process - Idea
+
 
 ```
 1> Pid = city_proc:start(london).
