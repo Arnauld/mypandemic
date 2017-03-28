@@ -250,7 +250,7 @@ divide(A,B) ->
 
 Create a module `city` with the following functions:
 
-* `new(CityName) -> City`
+* `new(CityName) -> {ok, City}`
 * `name_of(City) -> CityName`
 * `infects(City, Disease)`
 * `infection_level(City, Disease) -> Level`
@@ -373,6 +373,11 @@ should_outbreak_when_infection_level_reaches_the_threshold__test() ->
 
 #VSLIDE
 
+# Your turn!
+
+
+#VSLIDE
+
 #### Handle outbreak - `city`
 
 ```erlang
@@ -394,7 +399,6 @@ infects(City, Disease) ->
   case Level of
     ?THRESHOLD ->
       outbreak;
-
     _ ->
       NewLevels = Levels#{Disease => Level + 1},
       {infected, {CityName, NewLevels}}
