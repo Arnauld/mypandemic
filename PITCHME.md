@@ -1,4 +1,4 @@
-# Erlang microservices since 1987
+## Erlang microservices since 1987
 
 ### Yvan VU @JeSuisSocial
 ### Arnauld Loyer @aloyer
@@ -271,7 +271,6 @@ $ <open my ide>
 
 ```erlang
 -module(city_tests).
--author("Arnauld").
 
 -include_lib("eunit/include/eunit.hrl").
 
@@ -417,8 +416,8 @@ infects(City, Disease) ->
 5> 3 = city:infection_level(City4, blue).
 ```
 
-##### Annoying when lot of mutation occurs!!
-##### How to maintain them all ?
+* Annoying when lot of mutation occurs!!
+* How to maintain them all ?
 
 
 #VSLIDE
@@ -539,3 +538,8 @@ ok
 24> 
 ```
 
+
+
+#VSLIDE
+
+# Your turn!
