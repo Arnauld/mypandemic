@@ -1,6 +1,7 @@
+# Erlang microservices since 1987
 
-Yvan VU @JeSuisSocial
-Arnauld Loyer @aloyer
+### Yvan VU @JeSuisSocial
+### Arnauld Loyer @aloyer
 
 #HSLIDE
 
