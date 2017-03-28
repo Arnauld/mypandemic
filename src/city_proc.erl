@@ -13,7 +13,8 @@
 %% API Function Exports
 %% ------------------------------------------------------------------
 
--export([start/2, infects/2, infects/3]).
+-export([start/2]).
+-export([infection_level/2, infects/2, infects/3]).
 -export([loop/2]).
 
 %% ------------------------------------------------------------------
@@ -22,17 +23,26 @@
 start(CityName, Links) ->
   spawn(?MODULE, loop, [city:new(CityName), Links]).
 
-infects(_City, _Disease) ->
-  erlang:error(not_implemented).
+infection_level(City, Disease) ->
+  City ! {infection_level, Disease, self()},
+  receive
+    {infection_level, _, Disease, Level} ->
+      {ok, Level};
+    Other ->
+      {error, Other}
+  end.
 
-infects(_City, _Disease, _ReplyTo) ->
-  erlang:error(not_implemented).
+infects(City, Disease) when is_pid(City) ->
+  City ! {infect, Disease, noreply}.
+
+infects(City, Disease, ReplyTo) ->
+  City ! {infect, Disease, ReplyTo}.
 
 loop(City, Links) ->
   receive
     {infection_level, Disease, ReplyTo} ->
       Level = city:infection_level(City, Disease),
-      ReplyTo ! {infection_level, city:name_of(City), Disease, Level},
+      reply(ReplyTo, {infection_level, city:name_of(City), Disease, Level}),
       loop(City, Links);
 
     {infect, Disease, ReplyTo} ->
@@ -40,12 +50,15 @@ loop(City, Links) ->
       case Result of
         {infected, NewCity} ->
           Level = city:infection_level(NewCity, Disease),
-          ReplyTo ! {infected, city:name_of(City), Disease, Level},
+          reply(ReplyTo, {infected, city:name_of(City), Disease, Level}),
           loop(NewCity, Links);
 
         outbreak ->
-          ReplyTo ! {outbreak, city:name_of(City), Disease, Links}
+          reply(ReplyTo, {outbreak, city:name_of(City), Disease, Links}),
+          loop(City, Links)
 
       end
   end.
 
+reply(noreply, _Messag) -> ok;
+reply(ReplyTo, Message) -> ReplyTo ! Message.
