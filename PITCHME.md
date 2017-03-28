@@ -557,11 +557,8 @@ ok
 start(CityName, Links) ->
   spawn(?MODULE, loop, [city:new(CityName), Links]).
 
-infects(_City, _Disease) ->
-  erlang:error(not_implemented).
-
-infects(_City, _Disease, _ReplyTo) ->
-  erlang:error(not_implemented).
+infects(_City, _Disease)           -> erlang:error(not_implemented).
+infects(_City, _Disease, _ReplyTo) -> erlang:error(not_implemented).
 
 loop(City, Links) ->
   receive
