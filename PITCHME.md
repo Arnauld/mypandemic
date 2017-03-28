@@ -568,3 +568,30 @@ loop(City, Links) ->
       loop(City, Links)
   end.
 ```
+
+#VSLIDE
+
+### What happen if something wrong happens?
+
+```
+1> c("src/city"), c("src/city_proc").
+2> Pid = city_proc:start(london, [paris, essen, madrid]).
+<0.69.0>
+4> Pid!{infect, blue, self()}.
+{infect,blue,<0.57.0>}
+5> flush().
+Shell got {infected,london,blue,1}
+ok
+6> Pid!{infect, blue, invalid_process_id}.
+{infect,blue,invalid_process_id}
+7> 
+=ERROR REPORT==== 28-Mar-2017::13:34:07 ===
+Error in process <0.69.0> with exit value:
+{badarg,[{city_proc,loop,2,[{file,"src/city_proc.erl"},{line,44}]}]}
+```
+
+#VSLIDE
+
+### `monitor/2` and `register/2`
+
+
