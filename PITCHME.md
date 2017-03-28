@@ -417,8 +417,8 @@ infects(City, Disease) ->
 5> 3 = city:infection_level(City4, blue).
 ```
 
-#### Annoying when lot of mutation occurs!!
-#### How to maintain them all ?
+##### Annoying when lot of mutation occurs!!
+##### How to maintain them all ?
 
 
 #VSLIDE
