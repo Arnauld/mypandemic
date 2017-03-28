@@ -1,4 +1,4 @@
-## Erlang microservices since 1987
+## Erlang microservices <small>since 1987<small>
 
 ### Yvan VU @JeSuisSocial
 ### Arnauld Loyer @aloyer
@@ -537,9 +537,37 @@ Shell got {infected,london,blue,2}
 ok
 24> 
 ```
-
-
-
 #VSLIDE
 
 # Your turn!
+
+#VSLIDE
+
+```erlang
+-module(city_proc).
+%% ------------------------------------------------------------------
+%% API Function Exports
+%% ------------------------------------------------------------------
+-export([start/2, infects/2, infects/3]).
+-export([loop/2]).
+
+%% ------------------------------------------------------------------
+%% API Function Definitions
+%% ------------------------------------------------------------------
+start(CityName, Links) ->
+  spawn(?MODULE, loop, [city:new(CityName), Links]).
+
+infects(_City, _Disease) ->
+  erlang:error(not_implemented).
+
+infects(_City, _Disease, _ReplyTo) ->
+  erlang:error(not_implemented).
+
+loop(City, Links) ->
+  receive
+    {infection_level, Disease, ReplyTo} ->
+      Level = city:infection_level(City, Disease),
+      ReplyTo ! {infection_level, city:name_of(City), Disease, Level},
+      loop(City, Links)
+  end.
+```
