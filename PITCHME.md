@@ -602,7 +602,7 @@ reply(noreply, _Messag) -> ok;
 reply(ReplyTo, Message) -> ReplyTo ! Message.
 ```
 
-#VSLIDE
+#HSLIDE
 
 ### What happen if something wrong happens?
 
