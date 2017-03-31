@@ -662,6 +662,8 @@ true
 
 #VSLIDE
 
+## Supervisor
+
 Create a module `city_sup` with the following function
 
 * `start(CityName, Link) -> Pid`
