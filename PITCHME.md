@@ -564,7 +564,7 @@ infection_level(City, Disease) ->
       {error, Other}
   end.
 
-infects(City, Disease) when is_pid(City) ->
+infects(City, Disease) ->
   City ! {infect, Disease, noreply}.
 
 infects(City, Disease, ReplyTo) ->
