@@ -14,12 +14,13 @@
 %% ------------------------------------------------------------------
 
 -export([start/2]).
+-export([supervize/2]).
 
 %% ------------------------------------------------------------------
 %% API Function Definitions
 %% ------------------------------------------------------------------
 start(CityName, Links) ->
-  spawn(?MODULE, supervise, [CityName, Links]).
+  spawn(?MODULE, supervize, [CityName, Links]).
 
 supervize(CityName, Links) ->
   Pid = city_proc:start(CityName, Links),

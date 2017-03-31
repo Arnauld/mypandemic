@@ -631,4 +631,46 @@ Error in process <0.69.0> with exit value:
 
 ```
 
+#HSLIDE
 
+### `a bit of distribution!`
+
+
+```
+→ erl -sname right
+```
+
+```
+→ erl -sname left
+
+(left@Mentem)1> node().
+left@Mentem
+(left@Mentem)2> nodes().
+[]
+(left@Mentem)3> net_adm:ping('right@Mentem').
+pong
+(left@Mentem)4> nodes().
+[right@Mentem]
+(left@Mentem)5> 
+```
+
+#VSLIDE
+
+#### Terminal `right`
+
+```
+(right@Mentem)1> c("src/city.erl"), c("src/city_proc.erl"), c("src/city_sup.erl").
+...
+(right@Mentem)2> city_sup:start(london, [paris, essen]).                          
+<0.104.0>
+```
+
+#### Terminal `left`
+
+```
+(left@Mentem)5> [Right] = nodes().
+(left@Mentem)6> city_proc:infects({london, Right}, blue).
+{infect,blue,noreply}
+(left@Mentem)7> city_proc:infection_level({london, Right}, blue).
+{ok,3}
+```
