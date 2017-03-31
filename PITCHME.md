@@ -628,7 +628,20 @@ Error in process <0.69.0> with exit value:
 ### `monitor/2` and `register/2`
 
 ```
-
+1> Pid = city_proc:start(london, [essen, paris]).
+2> monitor(process, Pid).
+#Ref<0.0.1.84>
+3> Pid!{infect, blue, invalid_process_id}.
+{infect,blue,invalid_process_id}
+=ERROR REPORT==== 31-Mar-2017::13:39:30 ===
+...
+4> flush().
+Shell got {'DOWN',#Ref<0.0.1.84>,process,<0.59.0>,
+                  {badarg,[{city_proc,reply,2,
+                                      [{file,"src/city_proc.erl"},{line,64}]},
+                           {city_proc,loop,2,
+                                      [{file,"src/city_proc.erl"},
+                                       {line,53}]}]}}
 ```
 
 #HSLIDE
