@@ -604,7 +604,7 @@ reply(ReplyTo, Message) -> ReplyTo ! Message.
 
 #HSLIDE
 
-### What happen if something wrong happens?
+### Let it crash!
 
 ```
 1> c("src/city"), c("src/city_proc").
@@ -625,7 +625,7 @@ Error in process <0.69.0> with exit value:
 
 #VSLIDE
 
-### `monitor/2` and `register/2`
+### `monitor/2`
 
 ```
 1> Pid = city_proc:start(london, [essen, paris]).
@@ -644,9 +644,41 @@ Shell got {'DOWN',#Ref<0.0.1.84>,process,<0.59.0>,
                                        {line,53}]}]}}
 ```
 
+#VSLIDE
+
+### `register/2`
+
+```
+1> Pid = city_proc:start(london, [essen, paris]).
+<0.59.0>
+2> register(london, Pid).
+true
+3> london!{infect, blue, noreply}.
+{infect,blue,noreply}
+4> city_proc:infection_level(london, blue).
+{ok,1}
+5> 
+```
+
+#VSLIDE
+
+Create a module `city_sup` with the following function
+
+* `start(CityName, Link) -> Pid`
+
+Behavior:
+
+* supervisor must restart the city process if it crash
+* supervisor registers the city process with the given name
+
+#VSLIDE
+
+# Your turn!
+
+
 #HSLIDE
 
-### `a bit of distribution!`
+### a bit of distribution!
 
 
 ```
