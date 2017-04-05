@@ -22,12 +22,36 @@ by Joe Armstong, Robert Virding and Mike Williams
 - Reliability
 - Fault tolerance
 
+#VSLIDE
 
+#### Out of the box
+
+- Functional Programming
+- Concurrency (Actor Model)
+- Supervision
+- Client-Server (with OTP)
+- Distributed Database
+- Erlang Virtual Machine
 
 #HSLIDE
 
 ## Pandemic Game
 
+#VSLIDE
+
+#### Infect
+
+- increases a city disease level by 1
+- if the disease level is already at 3, an outbreak occurs
+
+![Infection](docs/pandemic/infection.jpg)
+
+#VSLIDE
+
+#### Outbreak 
+infect each neighbours in a chain without infecting the same city twice
+
+![Outbreak](docs/pandemic/outbreak.jpg)
 
 #HSLIDE
 
@@ -128,35 +152,6 @@ essen
 32> [madrid | Remaining2] = Remaining.
 33> Remaining2.
 []
-```
-
-
-#VSLIDE
-
-#### Erlang Basics - Map
-
-```
-3> ...
-4>
-```
-
-#VSLIDE
-
-#### Erlang Types
- 
-```erlang
-1> 1 + 4.
-atom.
-1+3.
-A = 23.
-LS = [1, 2, 3].
-[Head|Tail] = LS.
-[je_suis_une_liste_de_un_atom_et_de_deux_entier, 2, 3].
-Head.
-Tail.
-Levels = #{blue => 0}.
-LevelA = maps:get(blue, Levels).
-LevelB = maps:get(gray, Levels, 0).
 ```
 
 #VSLIDE
