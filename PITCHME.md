@@ -3,6 +3,11 @@
 ### Yvan VU @JeSuisSocial
 ### Arnauld Loyer @aloyer
 
+#VSLIDE
+
+![Arolla](docs/arolla.png)
+
+
 #HSLIDE
 
 ## A BRIEF HISTORY
@@ -36,6 +41,71 @@ by Joe Armstong, Robert Virding and Mike Williams
 #HSLIDE
 
 ## Pandemic Game
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.002.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.003.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.004.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.005.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.006.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.007.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.008.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.009.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.010.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.011.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.012.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.013.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.014.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.015.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.016.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.017.png)
+
 
 #VSLIDE
 
