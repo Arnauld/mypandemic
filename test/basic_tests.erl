@@ -17,9 +17,9 @@ a_test_function_ends_with_test() ->
 
 %% run this command to do all in one-liner
 %% (basically runs all commands procedurally)
-%% >  c("test/basic_tests"), c("src/basic"),eunit:test(basic_tests, [verbose]).
+%% >  c("test/basic_tests"), c("src/basic"), eunit:test(basic_tests, [verbose]).
 %%
-%% add 't' iteratively at the end of the functions so they can be tests
+%% add 't' iteratively at the end of the functions so they are detected as tests
 divide_should_return_the_division_of_two_numbers__tes() ->
   Dividend = 5,
   Divisor = 2,
