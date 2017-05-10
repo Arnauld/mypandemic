@@ -5,6 +5,7 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
+%% Do not forget this result pattern when implementing city process
 new_city__test() ->
   {ok, City} = city:new('Paris', ['London', 'Essen']),
   %

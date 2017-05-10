@@ -41,6 +41,11 @@ city_should_start_and_be_infected__tes() ->
   ?assertEqual({infected, paris}, InfectionResult).
 
 
+%% for tests purpose, we can tell the process no to reply,
+%% the behaviour of the response can be coded like this :
+%% replyTo(no_reply, _Response) -> ok;
+%% replyTo(From, Result) ->
+%%  From ! {ok, Result}.
 city_should_start_and_responds_to_infect_message_until_outbreak__tes() ->
   {ok, Pid} = city_proc:start_link(paris, [london, essen]),
   Pid ! {infect, blue, no_reply},
