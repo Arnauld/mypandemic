@@ -1,17 +1,10 @@
 %%%-------------------------------------------------------------------
-%%%
+%%% >  c("test/city_proc_tests"), c("src/city_proc"), eunit:test(city_proc_tests, [verbose]).
 %%%-------------------------------------------------------------------
 -module(city_proc_tests).
 
-%% API
--export([]).
-
 -include_lib("eunit/include/eunit.hrl").
 
-
-%% run all tests with :
-%% > eunit:test(city_proc_tests,[verbose]).
-%%
 city_should_start_and_responds_to_infection_level_message__test() ->
   {ok, Pid} = city_proc:start_link(paris, [london, essen]),
   Pid ! {infection_level, blue, self()},
@@ -56,7 +49,7 @@ city_should_start_and_responds_to_infect_message_until_outbreak__tes() ->
   Pid ! {infect, blue, self()},
   receive
     {ok, InfectionResult} ->
-      ?assertEqual({outreak, [london, essen]}, InfectionResult)
+      ?assertEqual({outbreak, [london, essen]}, InfectionResult)
   after
     500 ->
       error(timeout)
@@ -69,7 +62,7 @@ city_should_start_and_should_outbreak_after_4_infections__tes() ->
   city_proc:infect(Pid, blue),
   city_proc:infect(Pid, blue),
   OutbreakResult = city_proc:infect(Pid, blue),
-  ?assertEqual({outbreak, [london, essen]}, InfectionResult).
+  ?assertEqual({outbreak, [london, essen]}, OutbreakResult).
 
 
 each_city_should_start_in_its_own_process__tes() ->

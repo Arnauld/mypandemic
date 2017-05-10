@@ -1,10 +1,7 @@
 %%%-------------------------------------------------------------------
-%%%
+%%% >  c("test/city_tests"), c("src/city"), eunit:test(city_tests, [verbose]).
 %%%-------------------------------------------------------------------
 -module(city_tests).
-
-%% API
--export([]).
 
 -include_lib("eunit/include/eunit.hrl").
 
@@ -27,7 +24,7 @@ city_should_expose_its_name__tes() ->
 city_should_expose_its_neighbours__tes() ->
   {ok, City} = city:new('Paris', ['London', 'Essen']),
   Neighbours = city:neighbours(City),
-  ?assertEqual(['London', 'Essen'], CityName).
+  ?assertEqual(['London', 'Essen'], Neighbours).
 
 %% 4
 city_should_not_be_infected_dy_default__tes() ->
@@ -42,6 +39,9 @@ infecting_a_city_should_raise_infection_level__tes() ->
   InfectionLevel = city:infection_level(InfectedCity, red),
   ?assertEqual(1, InfectionLevel).
 
+%%
+%% Think about pattern matching (you case use case ... of)
+%%
 %% 6
 city_should_raise_an_outbreak_when_infection_level_reaches_the_threshold__tes() ->
   {ok, City} = city:new(london, [essen, paris]),
