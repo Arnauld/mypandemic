@@ -75,3 +75,8 @@ each_city_should_start_in_its_own_process__tes() ->
   {ok, Pid2} = city_proc:start_link(paris, [london, essen]),
   ?assertNotEqual(Pid1, Pid2).
 
+city_should_start_and_stop_gracefully__tes() ->
+  {ok, Pid} = city_proc:start_link(paris, [london, essen]),
+  Pid ! stop,
+  timer:sleep(500), %% unnecessary ?.
+  ?assertEqual(False, is_process_alive(Pid)).
