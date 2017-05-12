@@ -7,6 +7,11 @@
 
 ![Arolla](docs/arolla.png)
 
+#VSLIDE
+
+## http://bit.ly/ErlangHandsOn
+
+## https://github.com/Arnauld/mypandemic
 
 #HSLIDE
 
@@ -230,10 +235,12 @@ essen
 #### Module
 
 ```erlang
--module(calc).
--export([add/2]).
-add(A,B) ->
-    A+B.
+-module(basic).
+-export([sum/2]).
+
+sum(A, B) -> 
+  A + B.
+
 ```
 
 #VSLIDE
@@ -241,7 +248,7 @@ add(A,B) ->
 #### Module
 
 ```erlang
--module(calc).
+-module(basic).
 -export([add/2, divide/2]).
 add(A,B) ->
     A+B.
@@ -256,7 +263,7 @@ divide(A,B) ->
 #### Module
 
 ```erlang
--module(calc).
+-module(basic).
 -export([add/2, divide/2]).
 add(A,B) ->
     A+B.
@@ -272,7 +279,7 @@ divide(A,B) ->
 #### Module
 
 ```erlang
--module(calc).
+-module(basic).
 -export([add/2, divide/2]).
 add({Ax,Ay},{Bx,By}) ->
     {Ax+Bx, Ay + By};
@@ -290,7 +297,7 @@ divide(A,B) ->
 #### Module
 
 ```erlang
--module(calc).
+-module(basic).
 -export([add/1, add/2, divide/2]).
 
 add(Ls) ->
@@ -324,12 +331,8 @@ Create a module `city` with the following functions:
 #VSLIDE
 
 ```
-$ mkdir mypandemic
-$ cd mypandemic
-$ mkdir src && mkdir test
-$ touch test/city_test.erl
-$ touch src/city.erl
-$ <open my ide>
+$ git clone https://github.com/Arnauld/mypandemic
+$ <open my ide>/src
 ```
 
 #VSLIDE
