@@ -328,8 +328,9 @@ divide(A,B) ->
 Create a module `city` with the following functions:
 
 * `new(CityName) -> {ok, City}`
-* `name_of(City) -> CityName`
+* `name(City) -> CityName`
 * `infects(City, Disease)`
+* `neighbours(City) -> [CityName]`
 * `infection_level(City, Disease) -> Level`
 
 see `test/city_tests.erl`
