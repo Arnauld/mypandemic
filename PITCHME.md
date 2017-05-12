@@ -332,6 +332,8 @@ Create a module `city` with the following functions:
 * `infects(City, Disease)`
 * `infection_level(City, Disease) -> Level`
 
+see `test/city_tests.erl`
+
 #VSLIDE
 
 ```
