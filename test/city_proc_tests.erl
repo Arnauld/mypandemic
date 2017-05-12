@@ -79,4 +79,4 @@ city_should_start_and_stop_gracefully__tes() ->
   {ok, Pid} = city_proc:start_link(paris, [london, essen]),
   Pid ! stop,
   timer:sleep(500), %% unnecessary ?.
-  ?assertEqual(False, is_process_alive(Pid)).
+  ?assertEqual(false, is_process_alive(Pid)).
