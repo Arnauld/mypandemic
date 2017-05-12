@@ -9,9 +9,9 @@
 
 #VSLIDE
 
-## http://bit.ly/ErlangHandsOn
+[](http://bit.ly/ErlangHandsOn)
 
-## https://github.com/Arnauld/mypandemic
+[](https://github.com/Arnauld/mypandemic)
 
 #HSLIDE
 
