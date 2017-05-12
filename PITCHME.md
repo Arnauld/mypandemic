@@ -1,4 +1,4 @@
-## Erlang, concurrent functional programming <small>since 1987<small>
+## Erlang, <small>concurrent functional programming since 1987<small>
 
 ### Yvan VU @JeSuisSocial
 ### Arnauld Loyer @aloyer
@@ -15,7 +15,7 @@
 #VSLIDE
 
 #### 1987 : Erlang's birth
-by Joe Armstong, Robert Virding and Mike Williams
+by Robert Virding, Joe Armstong and Mike Williams
 
 #VSLIDE
 
