@@ -9,7 +9,11 @@
 
 #VSLIDE
 
+Slides
+
 [http://bit.ly/ErlangHandsOn](http://bit.ly/ErlangHandsOn)
+
+Code
 
 [https://github.com/Arnauld/mypandemic](https://github.com/Arnauld/mypandemic)
 
