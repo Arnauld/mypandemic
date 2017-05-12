@@ -1,4 +1,4 @@
-## Erlang microservices <small>since 1987<small>
+## Erlang, concurrent functional programming <small>since 1987<small>
 
 ### Yvan VU @JeSuisSocial
 ### Arnauld Loyer @aloyer
@@ -34,8 +34,9 @@ by Joe Armstong, Robert Virding and Mike Williams
 - Functional Programming
 - Concurrency (Actor Model)
 - Supervision
-- Client-Server (with OTP)
+- Distributed System
 - Distributed Database
+- Lot of Best Practices thanks to <b>OTP</b>
 - Erlang Virtual Machine
 
 #HSLIDE
