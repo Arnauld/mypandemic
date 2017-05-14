@@ -51,6 +51,16 @@ sum_should_return_the_sum_all_elements_of_a_list__tes() ->
   ?assertEqual(15, basic:sum(L)).
 
 %% 7
+%% apply with '+' or '/' for case of
+apply_should_return_the_sum_of_2_elements_when_operator_is_plus__tes() ->
+  Operator = '+',
+  ?assertEqual(8, basic:apply(4,Operator, 4)).
+
+%% 8
+apply_should_return_the_division_of_2_elements_when_operator_is_slash__tes() ->
+  Operator = '/',
+  ?assertEqual(1, basic:apply(4,Operator, 4)).
+
 maps_example_test() ->
   EmptyMap = #{},
   UpdatedMap1 = EmptyMap#{"Robert Virding" => '@rvirding'},

@@ -31,3 +31,11 @@ sum(A, B) -> A + B.
 %% we can get rid of the callstack (ever heard of stackoverflow error ?)
 %% -> think about communicating vessels = use of accumulators
 %% i.e : x/recCall() is not tail-call because of 'x/'that must be stacked.
+
+%% test 8 ->
+apply(A, Operator, B) ->
+  case Operator of
+    '+' -> call_sum_here;
+    '/' -> call_division_here;
+    _ -> no_op
+  end.
