@@ -17,13 +17,13 @@ city_should_start_and_responds_to_infection_level_message__test() ->
   end.
 
 
-city_should_start_and_expose_its_infection_level__tes() ->
+city_should_start_and_expose_its_infection_level__test() ->
   {ok, Pid} = city_proc:start_link(paris, [london, essen]),
   Level = city_proc:infection_level(Pid, blue),
   ?assertEqual(0, Level).
 
 
-city_should_start_and_responds_to_infect_message__tes() ->
+city_should_start_and_responds_to_infect_message__test() ->
   {ok, Pid} = city_proc:start_link(paris, [london, essen]),
   Pid ! {infect, blue, self()},
   receive
@@ -35,7 +35,7 @@ city_should_start_and_responds_to_infect_message__tes() ->
   end.
 
 
-city_should_start_and_be_infected__tes() ->
+city_should_start_and_be_infected__test() ->
   {ok, Pid} = city_proc:start_link(paris, [london, essen]),
   InfectionResult = city_proc:infect(Pid, blue),
   ?assertEqual({infected, paris}, InfectionResult).
@@ -46,7 +46,7 @@ city_should_start_and_be_infected__tes() ->
 %% replyTo(no_reply, _Response) -> ok;
 %% replyTo(From, Result) ->
 %%  From ! {ok, Result}.
-city_should_start_and_responds_to_infect_message_until_outbreak__tes() ->
+city_should_start_and_responds_to_infect_message_until_outbreak__test() ->
   {ok, Pid} = city_proc:start_link(paris, [london, essen]),
   Pid ! {infect, blue, no_reply},
   Pid ! {infect, blue, no_reply},
@@ -61,7 +61,7 @@ city_should_start_and_responds_to_infect_message_until_outbreak__tes() ->
   end.
 
 
-city_should_start_and_should_outbreak_after_4_infections__tes() ->
+city_should_start_and_should_outbreak_after_4_infections__test() ->
   {ok, Pid} = city_proc:start_link(paris, [london, essen]),
   city_proc:infect(Pid, blue),
   city_proc:infect(Pid, blue),
@@ -70,12 +70,12 @@ city_should_start_and_should_outbreak_after_4_infections__tes() ->
   ?assertEqual({outbreak, [london, essen]}, OutbreakResult).
 
 
-each_city_should_start_in_its_own_process__tes() ->
+each_city_should_start_in_its_own_process__test() ->
   {ok, Pid1} = city_proc:start_link(paris, [london, essen]),
   {ok, Pid2} = city_proc:start_link(paris, [london, essen]),
   ?assertNotEqual(Pid1, Pid2).
 
-city_should_start_and_stop_gracefully__tes() ->
+city_should_start_and_stop_gracefully__test() ->
   {ok, Pid} = city_proc:start_link(paris, [london, essen]),
   Pid ! stop,
   timer:sleep(500), %% unnecessary ?.
