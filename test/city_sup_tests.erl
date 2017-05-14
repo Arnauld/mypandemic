@@ -12,7 +12,7 @@ supervisor_should_start_and_register_a_process__test() ->
   ?assertEqual(Pid, whereis(city_sup)).
 
 %% register(atom_name, a_pid),
-supervisor_should_register_the_new_city_process__tes() ->
+supervisor_should_register_the_new_city_process__test() ->
   supervise_paris_city(),
   ?assertEqual(true, is_pid(whereis(paris))).
 
@@ -28,7 +28,7 @@ supervise_paris_city() ->
 %% {'DOWN', Ref, process, Pid, Reason}
 %% before terminating
 %% Reason = normal when it is not a failure
-supervisor_should_restart_the_city_process_after_a_failure__tes() ->
+supervisor_should_restart_the_city_process_after_a_failure__test() ->
   supervise_paris_city(),
   ParisPid = whereis(paris),
   paris ! {infection_level, blue, make_it_fail},
@@ -36,13 +36,13 @@ supervisor_should_restart_the_city_process_after_a_failure__tes() ->
   RestartedParisPid = whereis(paris),
   ?assertNotEqual(ParisPid, RestartedParisPid).
 
-supervisor_should_stop_when_its_last_child_stops_gracefully__tes() ->
+supervisor_should_stop_when_its_last_child_stops_gracefully__test() ->
   supervise_paris_city(),
   paris ! stop,
   timer:sleep(50),
   ?assertEqual(undefined, whereis(city_sup)).
 
-supervisor_should_still_live_when_one_of_its_children_stops_gracefully__tes() ->
+supervisor_should_still_live_when_one_of_its_children_stops_gracefully__test() ->
   supervise_paris_city(),
   unregister_city_sup(london),
   city_sup:new_child(london, [paris, essen]),
