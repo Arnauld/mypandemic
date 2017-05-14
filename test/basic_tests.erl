@@ -1,24 +1,15 @@
-%% Compile (when in root/parent dir) this with :
-%% > c("test/basic_tests").
+%% run this command to compile all needed modules and to run tests
+%% >  c("test/basic_tests"), c("src/basic"), eunit:test(basic_tests, [verbose]).
 -module(basic_tests).
-
-%% API
--export([]).
 
 %% Include this lib so you can do tests
 -include_lib("eunit/include/eunit.hrl").
 
-%% run all tests with :
-%% > eunit:test(basic_tests,[verbose]).
 a_test_function_ends_with_test() ->
   ActualValue = correct_this_value,
   ExpectedValue = true,
   ?assertEqual(ExpectedValue, ActualValue).
 
-%% run this command to do all in one-liner
-%% (basically runs all commands procedurally)
-%% >  c("test/basic_tests"), c("src/basic"), eunit:test(basic_tests, [verbose]).
-%%
 %% add 't' iteratively at the end of the functions so they are detected as tests
 divide_should_return_the_division_of_two_numbers__tes() ->
   Dividend = 5,
@@ -54,18 +45,18 @@ sum_should_return_the_sum_all_elements_of_a_list__tes() ->
 %% apply with '+' or '/' for case of
 apply_should_return_the_sum_of_2_elements_when_operator_is_plus__tes() ->
   Operator = '+',
-  ?assertEqual(8, basic:apply(4,Operator, 4)).
+  ?assertEqual(8, basic:apply(4, Operator, 4)).
 
 %% 8
 apply_should_return_the_division_of_2_elements_when_operator_is_slash__tes() ->
   Operator = '/',
-  ?assertEqual(1, basic:apply(4,Operator, 4)).
+  ?assertEqual(1.0, basic:apply(4, Operator, 4)).
 
 maps_example_test() ->
   EmptyMap = #{},
   UpdatedMap1 = EmptyMap#{"Robert Virding" => '@rvirding'},
   UpdatedMap2 = UpdatedMap1#{"Joe Armstrong" => '@joeerl'},
-  UpdatedMap3 = UpdatedMap2#{"Arnauld Loyer" => '@aloyer',"Yvan Vu" => '@JeSuisSocial'},
+  UpdatedMap3 = UpdatedMap2#{"Arnauld Loyer" => '@aloyer', "Yvan Vu" => '@JeSuisSocial'},
   SearchValue = maps:get("Mike Williams", UpdatedMap3, cannot_found_him_on_twitter),
   ?assertEqual(cannot_found_him_on_twitter, SearchValue),
   ?assertEqual('@JeSuisSocial', maps:get("Yvan Vu", UpdatedMap3)).
