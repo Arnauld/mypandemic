@@ -7,6 +7,8 @@
 %% don't forget to put the functions (with their arity)
 %% you want public here
 -export([divide/2]).
+-define(PLUS_SIGN, '+').
+-define(DIVISION_SIGN, '/').
 
 %% test 2 & 3 -> edit this function
 divide(A, B) -> 3.
@@ -35,7 +37,7 @@ sum(A, B) -> A + B.
 %% test 8 ->
 apply(A, Operator, B) ->
   case Operator of
-    '+' -> call_sum_here;
-    '/' -> call_division_here;
+    ?PLUS_SIGN -> call_sum_here;
+    ?DIVISION_SIGN -> call_division_here;
     _ -> no_op
   end.
