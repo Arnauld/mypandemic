@@ -1,7 +1,21 @@
-## Erlang microservices <small>since 1987<small>
+## Erlang, <small>concurrent functional programming since 1987<small>
 
 ### Yvan VU @JeSuisSocial
 ### Arnauld Loyer @aloyer
+
+#VSLIDE
+
+![Arolla](docs/arolla.png)
+
+#VSLIDE
+
+Slides
+
+[http://bit.ly/ErlangHandsOn](http://bit.ly/ErlangHandsOn)
+
+Code
+
+[https://github.com/Arnauld/mypandemic](https://github.com/Arnauld/mypandemic)
 
 #HSLIDE
 
@@ -10,7 +24,7 @@
 #VSLIDE
 
 #### 1987 : Erlang's birth
-by Joe Armstong, Robert Virding and Mike Williams
+by Robert Virding, Joe Armstong and Mike Williams
 
 #VSLIDE
 
@@ -29,13 +43,79 @@ by Joe Armstong, Robert Virding and Mike Williams
 - Functional Programming
 - Concurrency (Actor Model)
 - Supervision
-- Client-Server (with OTP)
+- Distributed System
 - Distributed Database
+- Lot of Best Practices thanks to <b>OTP</b>
 - Erlang Virtual Machine
 
 #HSLIDE
 
 ## Pandemic Game
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.002.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.003.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.004.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.005.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.006.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.007.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.008.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.009.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.010.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.011.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.012.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.013.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.014.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.015.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.016.png)
+
+#VSLIDE
+
+![Infection](docs/pandemic/erlang-hands-on.017.png)
+
 
 #VSLIDE
 
@@ -159,10 +239,12 @@ essen
 #### Module
 
 ```erlang
--module(calc).
--export([add/2]).
-add(A,B) ->
-    A+B.
+-module(basic).
+-export([sum/2]).
+
+sum(A, B) -> 
+  A + B.
+
 ```
 
 #VSLIDE
@@ -170,7 +252,7 @@ add(A,B) ->
 #### Module
 
 ```erlang
--module(calc).
+-module(basic).
 -export([add/2, divide/2]).
 add(A,B) ->
     A+B.
@@ -185,7 +267,7 @@ divide(A,B) ->
 #### Module
 
 ```erlang
--module(calc).
+-module(basic).
 -export([add/2, divide/2]).
 add(A,B) ->
     A+B.
@@ -201,7 +283,7 @@ divide(A,B) ->
 #### Module
 
 ```erlang
--module(calc).
+-module(basic).
 -export([add/2, divide/2]).
 add({Ax,Ay},{Bx,By}) ->
     {Ax+Bx, Ay + By};
@@ -219,7 +301,7 @@ divide(A,B) ->
 #### Module
 
 ```erlang
--module(calc).
+-module(basic).
 -export([add/1, add/2, divide/2]).
 
 add(Ls) ->
@@ -246,19 +328,18 @@ divide(A,B) ->
 Create a module `city` with the following functions:
 
 * `new(CityName) -> {ok, City}`
-* `name_of(City) -> CityName`
+* `name(City) -> CityName`
 * `infects(City, Disease)`
+* `neighbours(City) -> [CityName]`
 * `infection_level(City, Disease) -> Level`
+
+see `test/city_tests.erl`
 
 #VSLIDE
 
 ```
-$ mkdir mypandemic
-$ cd mypandemic
-$ mkdir src && mkdir test
-$ touch test/city_test.erl
-$ touch src/city.erl
-$ <open my ide>
+$ git clone https://github.com/Arnauld/mypandemic
+$ <open my ide>/src
 ```
 
 #VSLIDE
