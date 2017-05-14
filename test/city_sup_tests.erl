@@ -5,13 +5,29 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
+%% The idea here is to have one supervisor for all cities.
+%%
+%% Its responsibility is to spawn a city, monitor it,
+%% and restart it when the city fails (loosing the city state).
+%%
+%% If a city terminates normally,
+%% remove it from the monitored processes.
+%%
+%% If the last city terminates normally,
+%% the supervisor has no more reason to live :)
+%%
+%% supervisor must keep track of monitored cities references,
+%% so it can recreate them (Using Name and Neighbours data)
+
+%% register(atom_name, a_pid),
 supervisor_should_start_and_register_a_process__test() ->
   unregister_city_sup(city_sup),
   {ok, Pid} = city_sup:start_link(),
   timer:sleep(50),
   ?assertEqual(Pid, whereis(city_sup)).
 
-%% register(atom_name, a_pid),
+%% monitor(process, Pid) to monitor a process
+%% returns an identifier called Reference
 supervisor_should_register_the_new_city_process__tes() ->
   supervise_paris_city(),
   ?assertEqual(true, is_pid(whereis(paris))).
@@ -25,8 +41,9 @@ supervise_paris_city() ->
   timer:sleep(50).
 
 %% a monitored process sends a message of the form :
-%% {'DOWN', Ref, process, Pid, Reason}
+%% {'DOWN', Reference, process, Pid, Reason}
 %% before terminating
+%% Reference = Identifier returned when monitor was called
 %% Reason = normal when it is not a failure
 supervisor_should_restart_the_city_process_after_a_failure__tes() ->
   supervise_paris_city(),

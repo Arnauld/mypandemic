@@ -60,3 +60,6 @@ maps_example_test() ->
   SearchValue = maps:get("Mike Williams", UpdatedMap3, cannot_found_him_on_twitter),
   ?assertEqual(cannot_found_him_on_twitter, SearchValue),
   ?assertEqual('@JeSuisSocial', maps:get("Yvan Vu", UpdatedMap3)).
+
+ %% maps:remove(Key, TheMap) (returns updated Map)
+ %% maps:size(TheMap) (number of entries)
