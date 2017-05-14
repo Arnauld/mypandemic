@@ -613,7 +613,9 @@ Error in process <0.69.0> with exit value:
 
 #VSLIDE
 
-### `monitor/2` : Ref = monitor(process, Pid) 
+### `monitor/2` 
+ 
+Ref = monitor(process, Pid) 
 
 ```erlang
 1> Pid = city_proc:start(london, [essen, paris]).
@@ -632,6 +634,8 @@ Shell got {'DOWN',#Ref<0.0.1.84>,process,<0.59.0>,
 
 ### `register/2`
 
+register(name, Pid)
+
 ```erlang
 1> Pid = city_proc:start(london, [essen, paris]).
 <0.59.0>
@@ -648,9 +652,9 @@ true
 
 ## Supervisor
 
-Create a module `city_sup` with the following function
+Create a module `city_sup` 
 
-* `start_link() -> {ok, Pid}`
+* see module city_sup_tests
 
 Behavior:
 
