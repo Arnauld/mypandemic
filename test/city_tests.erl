@@ -16,32 +16,32 @@ new_city__test() ->
   ?assertEqual(ExpectedResult, City).
 
 %% 2
-city_should_expose_its_name__tes() ->
+city_should_expose_its_name__test() ->
   {ok, City} = city:new('Paris', ['London', 'Essen']),
   CityName = city:name(City),
   ?assertEqual('Paris', CityName).
 
 %% 3
-city_should_expose_its_neighbours__tes() ->
+city_should_expose_its_neighbours__test() ->
   {ok, City} = city:new('Paris', ['London', 'Essen']),
   Neighbours = city:neighbours(City),
   ?assertEqual(['London', 'Essen'], Neighbours).
 
 %% 4
-city_should_not_be_infected_dy_default__tes() ->
+city_should_not_be_infected_dy_default__test() ->
   {ok, City} = city:new('Paris', ['London', 'Essen']),
   InfectionLevel = city:infection_level(City, blue),
   ?assertEqual(0, InfectionLevel).
 
 %% 5
-infecting_a_city_should_raise_infection_level__tes() ->
+infecting_a_city_should_raise_infection_level__test() ->
   {ok, City} = city:new('Paris', ['London', 'Essen']),
   {infected, InfectedCity} = city:infect(City, blue),
   InfectionLevel = city:infection_level(InfectedCity, blue),
   ?assertEqual(1, InfectionLevel).
 
 %% 6
-infecting_a_city_should_raise_infection_level__multiple_diseases__tes() ->
+infecting_a_city_should_raise_infection_level__multiple_diseases__test() ->
   {ok, City} = city:new('Paris', ['London', 'Essen']),
   {infected, InfectedCity1} = city:infect(City, blue),
   {infected, InfectedCity2} = city:infect(InfectedCity1, red),
@@ -61,7 +61,7 @@ infecting_a_city_should_raise_infection_level__multiple_diseases__tes() ->
 %% Think about pattern matching (you case use case ... of)
 %%
 %% 7
-city_should_raise_an_outbreak_when_infection_level_reaches_the_threshold__tes() ->
+city_should_raise_an_outbreak_when_infection_level_reaches_the_threshold__test() ->
   {ok, City} = city:new(london, [essen, paris]),
   {infected, InfectedCity1} = city:infect(City, red),
   {infected, InfectedCity2} = city:infect(InfectedCity1, red),
