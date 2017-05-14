@@ -369,42 +369,18 @@ should_increase_infection_level_when_infected__test() ->
 ```erlang
 -module(city).
 
-%% ------------------------------------------------------------------
-%% API Function Exports
-%% ------------------------------------------------------------------
--export([new/1, infection_level/2, infects/2]).
+-export([new/2, name/1, infection_level/2, neighbours/1, infect/2]).
+new(Name, Neighbours) ->
+  {ok, {Name, Neighbours, #{}}}.
 
-%% ------------------------------------------------------------------
-%% API Function Definitions
-%% ------------------------------------------------------------------
-new(CityName) ->
-  {CityName, #{}}.
+name({Name, _Neighbours, _Infections}) ->
+  Name.
 
-infection_level(City, Disease) ->
-  {_CityName, Levels} = City,
-  maps:get(Disease, Levels, 0).
+neighbours({_Name, Neighbours, _Infections}) ->
+  Neighbours.
 
-infects(City, Disease) ->
-  {CityName, Levels} = City,
-  Level = maps:get(Disease, Levels, 0),
-  NewLevels = Levels#{Disease => Level + 1},
-  {CityName, NewLevels}.
-```
-
-#VSLIDE
-
-#### Handle outbreak
-
-**But before...**
-
-```erlang
-case Value of
-  0 -> zero;
-  1 -> one;
-  2 -> two;
-  ping -> pong;
-  _ -> i_don_t_know
-end
+infection_level({_Name, _Neighbours, Infections}, Color) ->
+  maps:get(Color, Infections, 0).
 ```
 
 #VSLIDE
@@ -414,69 +390,13 @@ end
 When infection level is already at 3, a new infect should cause an **outbreak**
 
 ```erlang
-infects(City, Disease) -> 
-  {infected, NewCity} 
-  | outbreak
-```
-
-#VSLIDE
-
-#### Handle outbreak - `city_tests`
-
-```erlang
--module(city_tests).
-
--include_lib("eunit/include/eunit.hrl").
-
-should_not_be_infected_by_default__test() ->
-  City = city:new(london),
-  ?assertEqual(0, city:infection_level(City, blue)).
-
-should_increase_infection_level_when_infected__test() ->
-  City1 = city:new(london),
-  {infected, City2} = city:infects(City1, blue),
-  ?assertEqual(1, city:infection_level(City2, blue)).
-
-should_outbreak_when_infection_level_reaches_the_threshold__test() ->
-  City1 = city:new(london),
-  {infected, City2} = city:infects(City1, blue),
-  {infected, City3} = city:infects(City2, blue),
-  {infected, City4} = city:infects(City3, blue),
-  Result = city:infects(City4, blue),
-  ?assertEqual(outbreak, Result).
-```
-
-#VSLIDE
-
-# Your turn!
-
-
-#VSLIDE
-
-#### Handle outbreak - `city`
-
-```erlang
--module(city).
-
--export([new/1, infection_level/2, infects/2]).
 -define(THRESHOLD, 3).
 
-new(CityName) ->
-  {CityName, #{}}.
-
-infection_level(City, Disease) ->
-  {_CityName, Levels} = City,
-  maps:get(Disease, Levels, 0).
-
-infects(City, Disease) ->
-  {CityName, Levels} = City,
-  Level = maps:get(Disease, Levels, 0),
+infect({Name, Neighbours, Infections}, Color) ->
+  Level = infection_level({Name, Neighbours, Infections}, Color),
   case Level of
-    ?THRESHOLD ->
-      outbreak;
-    _ ->
-      NewLevels = Levels#{Disease => Level + 1},
-      {infected, {CityName, NewLevels}}
+    ?THRESHOLD -> outbreak;
+    _ -> {infected, {Name, Neighbours, Infections#{Color => Level + 1}}}
   end.
 ```
 
@@ -484,8 +404,8 @@ infects(City, Disease) ->
 
 #### Process - Idea
 
-```
-1> City1 = city:new(london).
+```erlang
+1> {ok, City1} = city:new(london).
 2> {infected, City2} = city:infects(City1, blue).
 3> {infected, City3} = city:infects(City2, blue).
 4> {infected, City4} = city:infects(City3, blue).
@@ -501,12 +421,12 @@ infects(City, Disease) ->
 #### Process - Idea
 
 
-```
-1> Pid = city_proc:start(london).
-2> city:infects(Pid, blue).
-3> city:infects(Pid, blue).
-4> city:infects(Pid, blue).
-5> 3 = city:infection_level(Pid, blue).
+```erlang
+1> {ok, Pid} = city_proc:start_link(london).
+2> city_proc:infects(Pid, blue).
+3> city_proc:infects(Pid, blue).
+4> city_proc:infects(Pid, blue).
+5> 3 = city_proc:infection_level(Pid, blue).
 ```
 
 #VSLIDE
@@ -559,7 +479,7 @@ loop(Count) ->
 
 #### Process - State Mutation
 
-```
+```erlang
 1> c("src/rpl").
 {ok,rpl}
 2> Pid = rpl:start().
@@ -586,7 +506,7 @@ Waiting for message
 
 ![Infection Level](docs/protocol0.png)
 
-```
+```erlang
 17> Pid = city_proc:start(london, [paris, essen, madrid]).
 <0.102.0>
 18> Pid!{infection_level, blue, self()}.                  
@@ -603,7 +523,7 @@ ok
 
 ![Infection Level](docs/protocol1.png)
 
-```
+```erlang
 21> Pid = city_proc:start(london, [paris, essen, madrid]).
 <0.102.0>
 22> Pid!{infect, blue, self()}.                  
@@ -622,67 +542,59 @@ ok
 ## `city_proc.erl` 1/2
 
 ```erlang
--module(city_proc).
+-export([start_link/2, init/2, infection_level/2, infect/2]).
+start_link(Name, Neighbours) ->
+  {ok ,spawn(?MODULE, init, [Name, Neighbours])}.
 
--export([start/2]).
--export([infection_level/2, infects/2, infects/3]).
--export([loop/2]).
+init(Name, Neighbours) ->
+  {ok, State} = city:new(Name, Neighbours),
+  loop(State).
 
-start(CityName, Links) ->
-  spawn(?MODULE, loop, [city:new(CityName), Links]).
-
-infection_level(City, Disease) ->
-  City ! {infection_level, Disease, self()},
+infection_level(Pid, Color) ->
+  Pid ! {infection_level, Color, self()},
   receive
-    {infection_level, _, Disease, Level} ->
-      {ok, Level};
-    Other ->
-      {error, Other}
+    {ok, Level} -> Level
   end.
 
-infects(City, Disease) ->
-  City ! {infect, Disease, noreply}.
-
-infects(City, Disease, ReplyTo) ->
-  City ! {infect, Disease, ReplyTo}.
+infect(Pid, Color) ->
+  Pid ! {infect, Color, self()},
+  receive
+    {ok, Result} -> Result
+  end.
 ```
 
 #VSLIDE
 
 ## `city_proc.erl` 2/2
 
-```
-loop(City, Links) ->
+```erlang
+loop(State) ->
   receive
-    {infection_level, Disease, ReplyTo} ->
-      Level = city:infection_level(City, Disease),
-      reply(ReplyTo, {infection_level, city:name_of(City), Disease, Level}),
-      loop(City, Links);
-
-    {infect, Disease, ReplyTo} ->
-      Result = city:infects(City, Disease),
-      case Result of
-        {infected, NewCity} ->
-          Level = city:infection_level(NewCity, Disease),
-          reply(ReplyTo, {infected, city:name_of(City), Disease, Level}),
-          loop(NewCity, Links);
-
+    {infection_level, Color, From} ->
+      From ! {ok, city:infection_level(State, Color)},
+      loop(State);
+    {infect, Color, From} ->
+      case city:infect(State, Color) of
         outbreak ->
-          reply(ReplyTo, {outbreak, city:name_of(City), Disease, Links}),
-          loop(City, Links)
-
-      end
+          replyTo(From, {outbreak, city:neighbours(State)}),
+          loop(State);
+        {infected, NewState} ->
+          replyTo(From, {infected, city:name(State)}),
+          loop(NewState)
+      end;
+    stop -> ok
   end.
 
-reply(noreply, _Messag) -> ok;
-reply(ReplyTo, Message) -> ReplyTo ! Message.
+replyTo(no_reply, _Message) -> noreply;
+replyTo(From, Message) ->
+  From ! {ok, Message}.
 ```
 
 #HSLIDE
 
 ### Let it crash!
 
-```
+```erlang
 1> c("src/city"), c("src/city_proc").
 2> Pid = city_proc:start(london, [paris, essen, madrid]).
 <0.69.0>
@@ -696,14 +608,14 @@ ok
 7> 
 =ERROR REPORT==== 28-Mar-2017::13:34:07 ===
 Error in process <0.69.0> with exit value:
-{badarg,[{city_proc,loop,2,[{file,"src/city_proc.erl"},{line,44}]}]}
+...
 ```
 
 #VSLIDE
 
-### `monitor/2`
+### `monitor/2` : Ref = monitor(process, Pid) 
 
-```
+```erlang
 1> Pid = city_proc:start(london, [essen, paris]).
 2> monitor(process, Pid).
 #Ref<0.0.1.84>
@@ -713,18 +625,14 @@ Error in process <0.69.0> with exit value:
 ...
 4> flush().
 Shell got {'DOWN',#Ref<0.0.1.84>,process,<0.59.0>,
-                  {badarg,[{city_proc,reply,2,
-                                      [{file,"src/city_proc.erl"},{line,64}]},
-                           {city_proc,loop,2,
-                                      [{file,"src/city_proc.erl"},
-                                       {line,53}]}]}}
+         ...
 ```
 
 #VSLIDE
 
 ### `register/2`
 
-```
+```erlang
 1> Pid = city_proc:start(london, [essen, paris]).
 <0.59.0>
 2> register(london, Pid).
@@ -742,7 +650,7 @@ true
 
 Create a module `city_sup` with the following function
 
-* `start(CityName, Link) -> Pid`
+* `start_link() -> {ok, Pid}`
 
 Behavior:
 
