@@ -507,12 +507,12 @@ Waiting for message
 ![Infection Level](docs/protocol0.png)
 
 ```erlang
-17> Pid = city_proc:start(london, [paris, essen, madrid]).
-<0.102.0>
+17> {ok, Pid} = city_proc:start_link(london, [paris, essen, madrid]).
+{ok, <0.102.0>}
 18> Pid!{infection_level, blue, self()}.                  
 {infection_level,blue,<0.99.0>}
 19> flush().
-Shell got {infection_level,london,blue,0}
+Shell got {ok,0}
 ok
 20> 
 ```
@@ -524,12 +524,12 @@ ok
 ![Infection Level](docs/protocol1.png)
 
 ```erlang
-21> Pid = city_proc:start(london, [paris, essen, madrid]).
+21> {ok, Pid} = city_proc:start_link(london, [paris, essen, madrid]).
 <0.102.0>
 22> Pid!{infect, blue, self()}.                  
 {infect,blue,<0.99.0>}
 23> flush().
-Shell got {infected,london,blue,2}
+Shell got {ok, {infected,london}}
 ok
 24> 
 ```
@@ -596,12 +596,12 @@ replyTo(From, Message) ->
 
 ```erlang
 1> c("src/city"), c("src/city_proc").
-2> Pid = city_proc:start(london, [paris, essen, madrid]).
-<0.69.0>
+2> {ok, Pid} = city_proc:start_link(london, [paris, essen, madrid]).
+{ok, <0.69.0>}
 4> Pid!{infect, blue, self()}.
 {infect,blue,<0.57.0>}
 5> flush().
-Shell got {infected,london,blue,1}
+Shell got {ok, {infected,london}}
 ok
 6> Pid!{infect, blue, invalid_process_id}.
 {infect,blue,invalid_process_id}
@@ -618,7 +618,7 @@ Error in process <0.69.0> with exit value:
 Ref = monitor(process, Pid) 
 
 ```erlang
-1> Pid = city_proc:start(london, [essen, paris]).
+1> {ok, Pid} = city_proc:start_link(london, [essen, paris]).
 2> monitor(process, Pid).
 #Ref<0.0.1.84>
 3> Pid!{infect, blue, invalid_process_id}.
@@ -637,14 +637,14 @@ Shell got {'DOWN',#Ref<0.0.1.84>,process,<0.59.0>,
 register(name, Pid)
 
 ```erlang
-1> Pid = city_proc:start(london, [essen, paris]).
-<0.59.0>
+1> {ok, Pid} = city_proc:start_link(london, [essen, paris]).
+{ok, <0.59.0>}
 2> register(london, Pid).
 true
 3> london!{infect, blue, noreply}.
 {infect,blue,noreply}
 4> city_proc:infection_level(london, blue).
-{ok,1}
+1
 5> 
 ```
 
