@@ -117,8 +117,8 @@ i_am_an_atom
 #### Erlang Basics - Tuple
 
 ```erlang
-18> {devoxx, paris, france}.
-{devoxx, paris, france}
+18> {ncrafts, paris, france}.
+{ncrafts, paris, france}
 19> {erlang, 5}.
 {erlang, 5}
 20> HandsOn = {erlang, 200}.
