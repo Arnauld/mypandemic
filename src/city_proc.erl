@@ -10,7 +10,8 @@
 -author("Domo-kun").
 
 %% API
--export([start_link/2, init/2, infection_level/2, infect/2]).
+-export([start_link/2, infection_level/2, infect/2, infect_async/2]).
+-export([init/2]).
 start_link(Name, Neighbours) ->
   {ok, spawn_link(?MODULE, init, [Name, Neighbours])}.
 
@@ -21,7 +22,8 @@ init(Name, Neighbours) ->
 infection_level(Pid, Color) ->
   Pid ! {infection_level, Color, self()},
   receive
-    Response -> Response
+    {infection_level, CityName, Color, Level} ->
+      {CityName, Color, Level}
   end.
 
 infect(Pid, Color) ->
@@ -29,6 +31,9 @@ infect(Pid, Color) ->
   receive
     Result -> Result
   end.
+
+infect_async(Pid, Color) ->
+  Pid ! {infect, Color}.
 
 loop(State) ->
   receive

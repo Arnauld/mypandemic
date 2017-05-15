@@ -20,7 +20,7 @@ city_should_start_and_responds_to_infection_level_message__test() ->
 city_should_start_and_expose_its_infection_level__test() ->
   {ok, Pid} = city_proc:start_link(paris, [london, essen]),
   Response = city_proc:infection_level(Pid, blue),
-  ?assertEqual({infection_level, paris, blue, 0}, Response).
+  ?assertEqual({paris, blue, 0}, Response).
 
 
 city_should_start_and_responds_to_infect_message__test() ->
@@ -34,15 +34,30 @@ city_should_start_and_responds_to_infect_message__test() ->
       error(timeout)
   end.
 
-
 city_should_start_and_be_infected__test() ->
   {ok, Pid} = city_proc:start_link(paris, [london, essen]),
   InfectionResult = city_proc:infect(Pid, blue),
   ?assertEqual({infected, paris, blue, 1}, InfectionResult).
 
-city_should_start_and_responds_to_infect_message_until_outbreak__test() ->
+%%
+%% replyTo(no_reply, _City, _Color, _Message) -> noreply;
+%% replyTo(From, City, Color, {Verb, Data}) ->
+%%   From ! {Verb, city:name(City), Color, Data}.
+city_should_start_and_increment_infection_to_infect_async_message__test() ->
   {ok, Pid} = city_proc:start_link(paris, [london, essen]),
   Pid ! {infect, blue}, %% async -> no reply
+  Response = city_proc:infection_level(Pid, blue),
+  ?assertEqual({paris, blue, 1}, Response).
+
+city_should_start_and_be_infected_async__test() ->
+  {ok, Pid} = city_proc:start_link(paris, [london, essen]),
+  {infect, blue} = city_proc:infect_async(Pid, blue),
+  Response = city_proc:infection_level(Pid, blue),
+  ?assertEqual({paris, blue, 1}, Response).
+
+city_should_start_and_responds_to_infect_message_until_outbreak__test() ->
+  {ok, Pid} = city_proc:start_link(paris, [london, essen]),
+  Pid ! {infect, blue},
   Pid ! {infect, blue},
   Pid ! {infect, blue},
   Pid ! {infect, blue, self()},
