@@ -202,9 +202,9 @@ i_am_an_atom
 19> {erlang, 5}.
 {erlang, 5}
 20> HandsOn = {erlang, 200}.
-{erlang, 5}
+{erlang, 200}
 21> {What, Room} = HandsOn.
-erlang,5}
+{erlang,200}
 22> What.
 erlang
 23> Room.
