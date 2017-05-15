@@ -12,7 +12,7 @@
 %% API
 -export([start_link/2, init/2, infection_level/2, infect/2]).
 start_link(Name, Neighbours) ->
-  {ok ,spawn(?MODULE, init, [Name, Neighbours])}.
+  {ok, spawn_link(?MODULE, init, [Name, Neighbours])}.
 
 init(Name, Neighbours) ->
   {ok, State} = city:new(Name, Neighbours),
@@ -21,32 +21,37 @@ init(Name, Neighbours) ->
 infection_level(Pid, Color) ->
   Pid ! {infection_level, Color, self()},
   receive
-    {ok, Level} -> Level
+    Response -> Response
   end.
 
 infect(Pid, Color) ->
   Pid ! {infect, Color, self()},
   receive
-    {ok, Result} -> Result
+    Result -> Result
   end.
 
 loop(State) ->
   receive
     {infection_level, Color, From} ->
-      From ! {ok, city:infection_level(State, Color)},
+      From ! {infection_level, city:name(State), Color, city:infection_level(State, Color)},
       loop(State);
+    {infect, Color} ->
+      infect(State, Color, no_reply);
     {infect, Color, From} ->
-      case city:infect(State, Color) of
-        outbreak ->
-          replyTo(From, {outbreak, city:neighbours(State)}),
-          loop(State);
-        {infected, NewState} ->
-          replyTo(From, {infected, city:name(State)}),
-          loop(NewState)
-      end;
+      infect(State, Color, From);
     stop -> ok
   end.
 
-replyTo(no_reply, _Message) -> noreply;
-replyTo(From, Message) ->
-  From ! {ok, Message}.
+infect(State, Color, From) ->
+  case city:infect(State, Color) of
+    outbreak ->
+      replyTo(From, State, Color, {outbreak, city:neighbours(State)}),
+      loop(State);
+    {infected, NewState} ->
+      replyTo(From, NewState, Color, {infected, city:infection_level(NewState, Color)}),
+      loop(NewState)
+  end.
+
+replyTo(no_reply, _City, _Color, _Message) -> noreply;
+replyTo(From, City, Color, {Verb, Data}) ->
+  From ! {Verb, city:name(City), Color, Data}.
