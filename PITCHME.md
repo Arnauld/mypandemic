@@ -512,7 +512,7 @@ Waiting for message
 18> Pid!{infection_level, blue, self()}.                  
 {infection_level,blue,<0.99.0>}
 19> flush().
-Shell got {ok,0}
+Shell got {infection_level,london,blue,0}
 ok
 20> 
 ```
@@ -529,7 +529,7 @@ ok
 22> Pid!{infect, blue, self()}.                  
 {infect,blue,<0.99.0>}
 23> flush().
-Shell got {ok, {infected,london}}
+Shell got {infected,london, blue, 1}
 ok
 24> 
 ```
@@ -542,9 +542,13 @@ ok
 ## `city_proc.erl` 1/2
 
 ```erlang
--export([start_link/2, init/2, infection_level/2, infect/2]).
+-export([start/2, start_link/2, infection_level/2, infect/2, infect_async/2]).
+-export([init/2]).
+start(Name, Neighbours) ->
+  {ok, spawn(?MODULE, init, [Name, Neighbours])}.
+
 start_link(Name, Neighbours) ->
-  {ok ,spawn(?MODULE, init, [Name, Neighbours])}.
+  {ok, spawn_link(?MODULE, init, [Name, Neighbours])}.
 
 init(Name, Neighbours) ->
   {ok, State} = city:new(Name, Neighbours),
@@ -553,14 +557,18 @@ init(Name, Neighbours) ->
 infection_level(Pid, Color) ->
   Pid ! {infection_level, Color, self()},
   receive
-    {ok, Level} -> Level
+    {infection_level, CityName, Color, Level} ->
+      {CityName, Color, Level}
   end.
 
 infect(Pid, Color) ->
   Pid ! {infect, Color, self()},
   receive
-    {ok, Result} -> Result
+    Result -> Result
   end.
+
+infect_async(Pid, Color) ->
+  Pid ! {infect, Color}.
 ```
 
 #VSLIDE
@@ -571,23 +579,28 @@ infect(Pid, Color) ->
 loop(State) ->
   receive
     {infection_level, Color, From} ->
-      From ! {ok, city:infection_level(State, Color)},
+      From ! {infection_level, city:name(State), Color, city:infection_level(State, Color)},
       loop(State);
+    {infect, Color} ->
+      infect(State, Color, no_reply);
     {infect, Color, From} ->
-      case city:infect(State, Color) of
-        outbreak ->
-          replyTo(From, {outbreak, city:neighbours(State)}),
-          loop(State);
-        {infected, NewState} ->
-          replyTo(From, {infected, city:name(State)}),
-          loop(NewState)
-      end;
+      infect(State, Color, From);
     stop -> ok
   end.
 
-replyTo(no_reply, _Message) -> noreply;
-replyTo(From, Message) ->
-  From ! {ok, Message}.
+infect(State, Color, From) ->
+  case city:infect(State, Color) of
+    outbreak ->
+      replyTo(From, State, Color, {outbreak, city:neighbours(State)}),
+      loop(State);
+    {infected, NewState} ->
+      replyTo(From, NewState, Color, {infected, city:infection_level(NewState, Color)}),
+      loop(NewState)
+  end.
+
+replyTo(no_reply, _City, _Color, _Message) -> noreply;
+replyTo(From, City, Color, {Verb, Data}) ->
+  From ! {Verb, city:name(City), Color, Data}.
 ```
 
 #HSLIDE
