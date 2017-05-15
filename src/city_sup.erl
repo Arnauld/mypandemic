@@ -10,34 +10,24 @@
 -author("Domo-kun").
 
 %% API
--export([start_link/0, init/0, new_child/2]).
-start_link() ->
-  {ok, spawn(?MODULE, init, [])}.
+-export([start_link/2, loop/2]).
+start_link(Name, Neighbours) ->
+  {ok, spawn_link(?MODULE, loop, [Name, Neighbours])}.
 
-init() ->
-  register(?MODULE, self()),
-  loop(#{}).
-
-new_child(Name, Neighbours) ->
-  ?MODULE ! {spawn_child, Name, Neighbours}.
-
-loop(State) ->
+loop(Name, Neighbours) ->
+  Ref = spawnChild(Name, Neighbours),
   receive
-    {spawn_child, Name, Neighbours} ->
-      spawnChild(Name, Neighbours, State);
     {'DOWN', Ref, process, _Pid, normal} ->
-      NewState = maps:remove(Ref, State),
-      case maps:size(NewState) of
-        0 -> terminate;
-        _ -> loop(State)
-      end;
+      io:format("No more reason to live...~n"),
+      terminate;
     {'DOWN', Ref, process, _Pid, _Reason} ->
-      {Name, Neighbours} = maps:get(Ref, State),
-      spawnChild(Name, Neighbours, State)
+      io:format("OMG City ~p Process Down !!! Restarting it...~n", [Name]),
+      loop(Name, Neighbours)
   end.
 
-spawnChild(Name, Neighbours, State) ->
+spawnChild(Name, Neighbours) ->
+  %% I don't want to die if my child dies due to spawn_link
+  process_flag(trap_exit, true),
   {ok, Pid} = city_proc:start_link(Name, Neighbours),
   register(Name, Pid),
-  Ref = monitor(process, Pid),
-  loop(State#{Ref => {Name, Neighbours}}).
+  monitor(process, Pid).

@@ -10,8 +10,11 @@
 -author("Domo-kun").
 
 %% API
--export([start_link/2, infection_level/2, infect/2, infect_async/2]).
+-export([start/2, start_link/2, infection_level/2, infect/2, infect_async/2]).
 -export([init/2]).
+start(Name, Neighbours) ->
+  {ok, spawn(?MODULE, init, [Name, Neighbours])}.
+
 start_link(Name, Neighbours) ->
   {ok, spawn_link(?MODULE, init, [Name, Neighbours])}.
 
