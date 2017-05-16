@@ -7,12 +7,11 @@
 
 %% HOW TO SPAWN A CHILD :
 %% spawnChild(Name, Neighbours) ->
-%%   process_flag(trap_exit, true),
-%%   {ok, Pid} = city_proc:start_link(Name, Neighbours),
+%%   {ok, Pid} = city_proc:start(Name, Neighbours),
 %%   register(Name, Pid),
 %%   monitor(process, Pid).
 supervisor_should_start_and_register_new_city_process__test() ->
-  {ok, Pid} = city_sup:start_link(paris, [london, essen]),
+  {ok, Pid} = city_sup:start(paris, [london, essen]),
   timer:sleep(50),
   try
     ?assertEqual({paris, blue, 0}, city_proc:infection_level(paris, blue))
@@ -27,7 +26,7 @@ supervisor_should_start_and_register_new_city_process__test() ->
 %% before terminating
 %% Reason = normal when it is not a failure
 supervisor_should_restart_the_city_process_after_a_failure__test() ->
-  {ok, Pid} = city_sup:start_link(london, [paris, essen]),
+  {ok, Pid} = city_sup:start(london, [paris, essen]),
   timer:sleep(50),
   try
     ?assertEqual({infected, london, blue, 1}, city_proc:infect(london, blue))
@@ -42,7 +41,7 @@ supervisor_should_restart_the_city_process_after_a_failure__test() ->
 %%  ?assertEqual({london, blue, 1}, city_proc:infection_level(london, blue)).
 
 supervisor_should_stop_when_its_child_stops_gracefully__test() ->
-  {ok, Pid} = city_sup:start_link(essen, [london, paris]),
+  {ok, Pid} = city_sup:start(essen, [london, paris]),
   timer:sleep(50),
   essen ! stop,
   timer:sleep(50),

@@ -10,8 +10,8 @@
 -author("Domo-kun").
 
 %% API
--export([start_link/2, loop/2]).
-start_link(Name, Neighbours) ->
+-export([start/2, loop/2]).
+start(Name, Neighbours) ->
   {ok, spawn_link(?MODULE, loop, [Name, Neighbours])}.
 
 loop(Name, Neighbours) ->
@@ -26,8 +26,6 @@ loop(Name, Neighbours) ->
   end.
 
 spawnChild(Name, Neighbours) ->
-  %% I don't want to die if my child dies due to spawn_link
-  process_flag(trap_exit, true),
-  {ok, Pid} = city_proc:start_link(Name, Neighbours),
+  {ok, Pid} = city_proc:start(Name, Neighbours),
   register(Name, Pid),
   monitor(process, Pid).
