@@ -507,7 +507,7 @@ Waiting for message
 ![Infection Level](docs/protocol0.png)
 
 ```erlang
-17> {ok, Pid} = city_proc:start_link(london, [paris, essen, madrid]).
+17> {ok, Pid} = city_proc:start(london, [paris, essen, madrid]).
 {ok, <0.102.0>}
 18> Pid!{infection_level, blue, self()}.                  
 {infection_level,blue,<0.99.0>}
@@ -524,7 +524,7 @@ ok
 ![Infection Level](docs/protocol1.png)
 
 ```erlang
-21> {ok, Pid} = city_proc:start_link(london, [paris, essen, madrid]).
+21> {ok, Pid} = city_proc:start(london, [paris, essen, madrid]).
 <0.102.0>
 22> Pid!{infect, blue, self()}.                  
 {infect,blue,<0.99.0>}
@@ -542,13 +542,10 @@ ok
 ## `city_proc.erl` 1/2
 
 ```erlang
--export([start/2, start_link/2, infection_level/2, infect/2, infect_async/2]).
+-export([start/2, infection_level/2, infect/2, infect_async/2]).
 -export([init/2]).
 start(Name, Neighbours) ->
   {ok, spawn(?MODULE, init, [Name, Neighbours])}.
-
-start_link(Name, Neighbours) ->
-  {ok, spawn_link(?MODULE, init, [Name, Neighbours])}.
 
 init(Name, Neighbours) ->
   {ok, State} = city:new(Name, Neighbours),
@@ -609,7 +606,7 @@ replyTo(From, City, Color, {Verb, Data}) ->
 
 ```erlang
 1> c("src/city"), c("src/city_proc").
-2> {ok, Pid} = city_proc:start_link(london, [paris, essen, madrid]).
+2> {ok, Pid} = city_proc:start(london, [paris, essen, madrid]).
 {ok, <0.69.0>}
 4> Pid!{infect, blue, self()}.
 {infect,blue,<0.57.0>}
@@ -631,7 +628,7 @@ Error in process <0.69.0> with exit value:
 Ref = monitor(process, Pid) 
 
 ```erlang
-1> {ok, Pid} = city_proc:start_link(london, [essen, paris]).
+1> {ok, Pid} = city_proc:start(london, [essen, paris]).
 2> monitor(process, Pid).
 #Ref<0.0.1.84>
 3> Pid!{infect, blue, invalid_process_id}.
@@ -650,7 +647,7 @@ Shell got {'DOWN',#Ref<0.0.1.84>,process,<0.59.0>,
 register(name, Pid)
 
 ```erlang
-1> {ok, Pid} = city_proc:start_link(london, [essen, paris]).
+1> {ok, Pid} = city_proc:start(london, [essen, paris]).
 {ok, <0.59.0>}
 2> register(london, Pid).
 true
