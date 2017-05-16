@@ -23,8 +23,8 @@ neighbours({_Name, Neighbours, _Infections}) ->
 infection_level({_Name, _Neighbours, Infections}, Color) ->
   maps:get(Color, Infections, 0).
 
-infect({Name, Neighbours, Infections}, Color) ->
-  Level = infection_level({Name, Neighbours, Infections}, Color),
+infect(City = {Name, Neighbours, Infections}, Color) ->
+  Level = infection_level(City, Color),
   case Level of
     3 -> outbreak;
     _ -> {infected, {Name, Neighbours, Infections#{Color => Level + 1}}}
