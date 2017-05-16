@@ -45,21 +45,21 @@ city_should_start_and_be_infected__test() ->
 %%   From ! {Verb, city:name(City), Color, Data}.
 city_should_start_and_increment_infection_to_infect_async_message__test() ->
   {ok, Pid} = city_proc:start(paris, [london, essen]),
-  Pid ! {infect, blue}, %% async -> no reply
+  Pid ! {infect, blue, no_reply},
   Response = city_proc:infection_level(Pid, blue),
   ?assertEqual({paris, blue, 1}, Response).
 
 city_should_start_and_be_infected_async__test() ->
   {ok, Pid} = city_proc:start(paris, [london, essen]),
-  {infect, blue} = city_proc:infect_async(Pid, blue),
+  {infect, blue, _AnotherPid} = city_proc:infect_async(Pid, blue, self()),
   Response = city_proc:infection_level(Pid, blue),
   ?assertEqual({paris, blue, 1}, Response).
 
 city_should_start_and_responds_to_infect_message_until_outbreak__test() ->
   {ok, Pid} = city_proc:start(paris, [london, essen]),
-  Pid ! {infect, blue},
-  Pid ! {infect, blue},
-  Pid ! {infect, blue},
+  Pid ! {infect, blue, no_reply},
+  Pid ! {infect, blue, no_reply},
+  Pid ! {infect, blue, no_reply},
   Pid ! {infect, blue, self()},
   receive
     InfectionResult ->

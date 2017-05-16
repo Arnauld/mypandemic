@@ -10,7 +10,7 @@
 -author("Domo-kun").
 
 %% API
--export([start/2, infection_level/2, infect/2, infect_async/2]).
+-export([start/2, infection_level/2, infect/2, infect_async/3]).
 -export([init/2]).
 start(Name, Neighbours) ->
   {ok, spawn(?MODULE, init, [Name, Neighbours])}.
@@ -27,36 +27,35 @@ infection_level(Pid, Color) ->
   end.
 
 infect(Pid, Color) ->
-  Pid ! {infect, Color, self()},
+  infect_async(Pid, Color, self()),
   receive
     Result -> Result
   end.
 
-infect_async(Pid, Color) ->
-  Pid ! {infect, Color}.
+infect_async(Pid, Color, ReplyTo) ->
+  Pid ! {infect, Color, ReplyTo}.
 
 loop(State) ->
   receive
     {infection_level, Color, From} ->
       From ! {infection_level, city:name(State), Color, city:infection_level(State, Color)},
       loop(State);
-    {infect, Color} ->
-      infect(State, Color, no_reply);
     {infect, Color, From} ->
-      infect(State, Color, From);
+      NewState = infect(State, Color, From),
+      loop(NewState);
     stop -> ok
   end.
 
 infect(State, Color, From) ->
   case city:infect(State, Color) of
     outbreak ->
-      replyTo(From, State, Color, {outbreak, city:neighbours(State)}),
-      loop(State);
+      replyTo(From, {outbreak, city:name(State), Color, city:neighbours(State)}),
+      State;
     {infected, NewState} ->
-      replyTo(From, NewState, Color, {infected, city:infection_level(NewState, Color)}),
-      loop(NewState)
+      replyTo(From, {infected, city:name(NewState), Color, city:infection_level(NewState, Color)}),
+      NewState
   end.
 
-replyTo(no_reply, _City, _Color, _Message) -> noreply;
-replyTo(From, City, Color, {Verb, Data}) ->
-  From ! {Verb, city:name(City), Color, Data}.
+replyTo(no_reply, _Message) -> noreply;
+replyTo(From, Message) ->
+  From ! Message.
