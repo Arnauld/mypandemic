@@ -542,10 +542,10 @@ ok
 ## `city_proc.erl` 1/2
 
 ```erlang
--export([start/2, infection_level/2, infect/2, infect_async/2]).
--export([init/2]).
+-export([start/2, init/2, infection_level/2, infect/2, infect_async/3]).
 start(Name, Neighbours) ->
-  {ok, spawn(?MODULE, init, [Name, Neighbours])}.
+  Pid = spawn(?MODULE, init, [Name, Neighbours]),
+  {ok, Pid}.
 
 init(Name, Neighbours) ->
   {ok, State} = city:new(Name, Neighbours),
@@ -559,13 +559,13 @@ infection_level(Pid, Color) ->
   end.
 
 infect(Pid, Color) ->
-  Pid ! {infect, Color, self()},
+  infect_async(Pid, Color, self()),
   receive
     Result -> Result
   end.
 
-infect_async(Pid, Color) ->
-  Pid ! {infect, Color}.
+infect_async(Pid, Color, ReplyTo) ->
+  Pid ! {infect, Color, ReplyTo}.
 ```
 
 #VSLIDE
@@ -576,30 +576,29 @@ infect_async(Pid, Color) ->
 loop(State) ->
   receive
     {infection_level, Color, From} ->
-      Level = city:infection_level(State, Color),
-      From ! {infection_level, city:name(State), Color, Level},
+      Reply = {infection_level, city:name(State), Color, city:infection_level(State, Color)},
+      replyTo(From, Reply),
       loop(State);
-    {infect, Color} ->
-      infect(State, Color, no_reply);
     {infect, Color, From} ->
-      infect(State, Color, From);
+      {NewState, Reply} = do_infect(State, Color),
+      replyTo(From, Reply),
+      loop(NewState);
     stop -> ok
   end.
 
-infect(State, Color, From) ->
+do_infect(State, Color) ->
   case city:infect(State, Color) of
     outbreak ->
-      replyTo(From, State, Color, {outbreak, city:neighbours(State)}),
-      loop(State);
+      Reply = {outbreak, city:name(State), Color, city:neighbours(State)},
+      {State, Reply};
     {infected, NewState} ->
-      Level = city:infection_level(NewState, Color),
-      replyTo(From, NewState, Color, {infected, Level}),
-      loop(NewState)
+      Reply = {infected, city:name(NewState), Color, city:infection_level(NewState, Color)},
+      {NewState, Reply}
   end.
 
-replyTo(no_reply, _City, _Color, _Message) -> noreply;
-replyTo(From, City, Color, {Verb, Data}) ->
-  From ! {Verb, city:name(City), Color, Data}.
+replyTo(no_reply, _Message) -> noreply;
+replyTo(From, Message) ->
+  From ! Message.
 ```
 
 #HSLIDE
