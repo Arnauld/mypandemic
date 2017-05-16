@@ -13,7 +13,8 @@
 -export([start/2, infection_level/2, infect/2, infect_async/3]).
 -export([init/2]).
 start(Name, Neighbours) ->
-  {ok, spawn(?MODULE, init, [Name, Neighbours])}.
+  Pid = spawn(?MODULE, init, [Name, Neighbours]),
+  {ok, Pid}.
 
 init(Name, Neighbours) ->
   {ok, State} = city:new(Name, Neighbours),
@@ -38,22 +39,24 @@ infect_async(Pid, Color, ReplyTo) ->
 loop(State) ->
   receive
     {infection_level, Color, From} ->
-      From ! {infection_level, city:name(State), Color, city:infection_level(State, Color)},
+      Reply = {infection_level, city:name(State), Color, city:infection_level(State, Color)},
+      replyTo(From, Reply),
       loop(State);
     {infect, Color, From} ->
-      NewState = infect(State, Color, From),
+      {NewState, Reply} = do_infect(State, Color),
+      replyTo(From, Reply),
       loop(NewState);
     stop -> ok
   end.
 
-infect(State, Color, From) ->
+do_infect(State, Color) ->
   case city:infect(State, Color) of
     outbreak ->
-      replyTo(From, {outbreak, city:name(State), Color, city:neighbours(State)}),
-      State;
+      Reply = {outbreak, city:name(State), Color, city:neighbours(State)},
+      {State, Reply};
     {infected, NewState} ->
-      replyTo(From, {infected, city:name(NewState), Color, city:infection_level(NewState, Color)}),
-      NewState
+      Reply = {infected, city:name(NewState), Color, city:infection_level(NewState, Color)},
+      {NewState, Reply}
   end.
 
 replyTo(no_reply, _Message) -> noreply;
