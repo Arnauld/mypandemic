@@ -392,10 +392,10 @@ When infection level is already at 3, a new infect should cause an **outbreak**
 ```erlang
 -define(THRESHOLD, 3).
 
-infect({Name, Neighbours, Infections}, Color) ->
-  Level = infection_level({Name, Neighbours, Infections}, Color),
+infect(City = {Name, Neighbours, Infections}, Color) ->
+  Level = infection_level(City, Color),
   case Level of
-    ?THRESHOLD -> outbreak;
+    3 -> outbreak;
     _ -> {infected, {Name, Neighbours, Infections#{Color => Level + 1}}}
   end.
 ```
@@ -576,7 +576,8 @@ infect_async(Pid, Color) ->
 loop(State) ->
   receive
     {infection_level, Color, From} ->
-      From ! {infection_level, city:name(State), Color, city:infection_level(State, Color)},
+      Level = city:infection_level(State, Color),
+      From ! {infection_level, city:name(State), Color, Level},
       loop(State);
     {infect, Color} ->
       infect(State, Color, no_reply);
@@ -591,7 +592,8 @@ infect(State, Color, From) ->
       replyTo(From, State, Color, {outbreak, city:neighbours(State)}),
       loop(State);
     {infected, NewState} ->
-      replyTo(From, NewState, Color, {infected, city:infection_level(NewState, Color)}),
+      Level = city:infection_level(NewState, Color),
+      replyTo(From, NewState, Color, {infected, Level}),
       loop(NewState)
   end.
 
