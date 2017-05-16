@@ -12,7 +12,7 @@
 %% API
 -export([start/2, loop/2]).
 start(Name, Neighbours) ->
-  {ok, spawn_link(?MODULE, loop, [Name, Neighbours])}.
+  {ok, spawn(?MODULE, loop, [Name, Neighbours])}.
 
 loop(Name, Neighbours) ->
   Ref = spawnChild(Name, Neighbours),
